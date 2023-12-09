@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Elden Build</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="weight_text">Weight: %1$s</string>
+    <string name="stats_text">%1$s: %2$s</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="attack_power">Attack Power</string>
+    <string name="guarded_damage">Guarded Damage Negation</string>
+    <string name="attributes_scaling">Attributes Scaling</string>
+    <string name="attributes_required">Attributes Required</string>
+    <string name="load_armors">Load Armors</string>
+    <string name="load_weapons">Load Weapons</string>
+    <string name="resistance_text">Resistance</string>
+    <string name="damage_negation">Damage Negation</string>
 </resources>

@@ -9,5 +9,13 @@
         android:id="@+id/buildsOverviewFragment"
         android:name="com.eldenbuild.ui.builds_overview_fragment.BuildsOverviewFragment"
         android:label="fragment_builds_overview"
-        tools:layout="@layout/fragment_builds_overview" />
+        tools:layout="@layout/fragment_builds_overview" >
+        <action
+            android:id="@+id/action_buildsOverviewFragment_to_itemDetailsFragment"
+            app:destination="@id/itemDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemDetailsFragment"
+        android:name="com.eldenbuild.ui.itemdetailfragment.ItemDetailsFragment"
+        android:label="ItemDetailsFragment" />
 </navigation>

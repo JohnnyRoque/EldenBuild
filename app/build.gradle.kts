@@ -35,7 +35,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures{
+    buildFeatures {
         dataBinding = true
     }
 }
@@ -49,14 +49,12 @@ dependencies {
     //Retrofit and Moshi
     implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
-
+    implementation("androidx.recyclerview:recyclerview")
 
 
     //Fragment Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
-
-
 
 
     //Coroutines Lifecycle
@@ -68,7 +66,6 @@ dependencies {
 
     //Coil
     implementation("io.coil-kt:coil:2.5.0")
-
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

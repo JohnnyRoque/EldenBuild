@@ -25,12 +25,13 @@
         android:layout_height="match_parent"
         android:padding="2dp">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_selection_grid_recycler"
             android:layout_width="0dp"
-            android:overScrollMode="never"
             android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:overScrollMode="never"
             android:padding="6dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/material_button"
@@ -38,7 +39,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:listData="@{viewModel.showItemList}"
-            app:spanCount="2"
+            app:spanCount="3"
+            tools:itemCount="16"
             tools:listitem="@layout/item_selection_grid" />
 
         <com.google.android.material.button.MaterialButton
@@ -47,7 +49,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{() -> viewModel.setItem(armor)}"
             android:padding="16dp"
-            android:text="Load Armors"
+            android:text="@string/load_armors"
             android:textAppearance="?attr/textAppearanceButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -58,7 +60,7 @@
             android:layout_height="wrap_content"
             android:onClick="@{() -> viewModel.setItem(weapon)}"
             android:padding="16dp"
-            android:text="Load Weapons"
+            android:text="@string/load_weapons"
             android:textAppearance="?attr/textAppearanceButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
