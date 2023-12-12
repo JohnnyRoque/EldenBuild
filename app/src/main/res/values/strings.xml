@@ -12,4 +12,17 @@
     <string name="load_weapons">Load Weapons</string>
     <string name="resistance_text">Resistance</string>
     <string name="damage_negation">Damage Negation</string>
+    <string name="intelligence_build">Intelligence build</string>
+    <string name="faith_build">Faith build</string>
+    <string name="arcane_build">Arcane build</string>
+    <string name="strength_build">Strength build</string>
+    <string name="dexterity_build">Dexterity build</string>
+    <string name="add_new_build">Add new build</string>
+    <string name="build_name">Build name</string>
+    <string name="type_of_build">Type of build</string>
+    <string name="new_build">New Build</string>
+    <string name="name_and_type_of_the_build">New build</string>
+    <string name="toast_text">To create a class inform the name and type</string>
+    <string name="accept_text">accept</string>
+    <string name="cancel_text">Cancel</string>
 </resources>

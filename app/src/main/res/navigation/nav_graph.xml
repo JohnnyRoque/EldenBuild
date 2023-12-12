@@ -11,11 +11,19 @@
         android:label="fragment_builds_overview"
         tools:layout="@layout/fragment_builds_overview" >
         <action
-            android:id="@+id/action_buildsOverviewFragment_to_itemDetailsFragment"
-            app:destination="@id/itemDetailsFragment" />
+            android:id="@+id/action_buildsOverviewFragment_to_buildDetailFragment"
+            app:destination="@id/buildDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemDetailsFragment"
         android:name="com.eldenbuild.ui.itemdetailfragment.ItemDetailsFragment"
         android:label="ItemDetailsFragment" />
+    <fragment
+        android:id="@+id/buildDetailFragment"
+        android:name="com.eldenbuild.ui.build_detail_fragment.BuildDetailFragment"
+        android:label="BuildDetailFragment" >
+        <action
+            android:id="@+id/action_buildDetailFragment_to_itemDetailsFragment"
+            app:destination="@id/itemDetailsFragment" />
+    </fragment>
 </navigation>

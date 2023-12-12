@@ -4,6 +4,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://eldenring.fanapis.com/api/"
 
@@ -17,12 +18,14 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .build()
 
- interface EldenBuildApiService{
+ interface EldenBuildApiService {
     @GET("weapons")
-      suspend fun getWeapons():  WeaponResponse
+       suspend fun getWeapon(@Query("limit") limit: Int,@Query("page") page:Int): WeaponResponse
     @GET("armors")
      suspend fun getArmors(): ArmorResponse
 
+   @GET("weapons")
+    suspend fun queryItem(@Query("name") itemName:String) : WeaponResponse
 }
 
 object EldenBuildApi{

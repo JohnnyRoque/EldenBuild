@@ -1,5 +1,6 @@
 package com.eldenbuild.util
 
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
@@ -8,6 +9,7 @@ import coil.load
 import com.eldenbuild.R
 import com.eldenbuild.data.ItemsDefaultCategories
 import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 
 @BindingAdapter("imageUrl")
 fun bindingImage(imageView: ImageView, imgUrl: String?) {
@@ -23,6 +25,10 @@ fun bindingImage(imageView: ImageView, imgUrl: String?) {
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<ItemsDefaultCategories>?) {
     val adapter = recyclerView.adapter as OverviewRecyclerAdapter
     adapter.submitList(data)
+}
+@BindingAdapter("menuList")
+fun bindListToMenu(autoCompleteTextView: AutoCompleteTextView,list:Array<String>){
+(autoCompleteTextView as MaterialAutoCompleteTextView).setSimpleItems(list)
 }
 
 

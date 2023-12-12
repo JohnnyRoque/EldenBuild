@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.eldenbuild.R
 import com.eldenbuild.databinding.FragmentBuildsOverviewBinding
+import com.eldenbuild.util.Dialog
 import com.eldenbuild.util.Items
 import com.eldenbuild.viewmodel.OverViewViewModel
 
@@ -18,10 +18,6 @@ class BuildsOverviewFragment : Fragment() {
     private var _binding: FragmentBuildsOverviewBinding? = null
     private val binding get() = _binding!!
     private val sharedViewModel: OverViewViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,14 +37,15 @@ class BuildsOverviewFragment : Fragment() {
             weapon = Items.WEAPON
 
         }
-        binding.itemSelectionGridRecycler.adapter = OverviewRecyclerAdapter {id: String, position: Int ->
-
-                sharedViewModel.showItemDetail(id)
-                Log.d(TAG,position.toString())
-                findNavController().navigate(BuildsOverviewFragmentDirections.actionBuildsOverviewFragmentToItemDetailsFragment())
+        binding.addBuildFab.setOnClickListener {
+            Dialog.buildCustomDialog(requireContext(),layoutInflater,){name,type ->
+                binding.slidingPaneLayout.openPane()
+                Log.d(TAG,"$name and $type")
             }
+        }
         super.onViewCreated(view, savedInstanceState)
     }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()

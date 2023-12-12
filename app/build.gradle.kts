@@ -51,6 +51,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("androidx.recyclerview:recyclerview")
 
+    //Sliding Pane Layout
+    implementation("androidx.slidingpanelayout:slidingpanelayout:1.2.0")
+
 
     //Fragment Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.5")

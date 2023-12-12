@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.eldenbuild.data.BuildCategories
 import com.eldenbuild.data.ItemArmors
 import com.eldenbuild.data.ItemWeapons
 import com.eldenbuild.data.ItemsDefaultCategories
@@ -18,26 +19,23 @@ import kotlin.system.measureTimeMillis
 const val NETWORK_TEST = "network_test"
 
 class OverViewViewModel : ViewModel() {
+    private val _builds: MutableLiveData<MutableList<BuildCategories>> = MutableLiveData(
+        mutableListOf()
+    )
+    val builds: LiveData<List<BuildCategories>> = _builds.map {
+            it as List<BuildCategories> }
 
     private val _itemDetail = MutableLiveData<ItemsDefaultCategories>()
     val itemDetail: LiveData<ItemsDefaultCategories> = _itemDetail
 
     private val _showItemList = MutableLiveData<List<ItemsDefaultCategories>>()
-    val showItemList: LiveData<List<ItemsDefaultCategories>> = _showItemList.map { list ->
-        list.sortedBy { it.category }
-    }
-
-    private val _armorStatus = MutableLiveData<String>()
-    val status: LiveData<String> = _armorStatus
-
-    private val _weaponStatus = MutableLiveData<String>()
-    val weaponStatus: LiveData<String> = _weaponStatus
+    val showItemList: LiveData<List<ItemsDefaultCategories>> = _showItemList
 
     private val _listOfWeapons: MutableLiveData<List<ItemWeapons>> = MutableLiveData()
     private val listOfWeapons: LiveData<List<ItemWeapons>> = _listOfWeapons
 
     private val _listOfArmors: MutableLiveData<List<ItemArmors>> = MutableLiveData()
-    val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
+    private val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
     fun showItemDetail(itemId: String) {
         _showItemList.value?.let {
             for (i in 0..it.lastIndex) {
@@ -49,7 +47,6 @@ class OverViewViewModel : ViewModel() {
             }
         }
     }
-
 
 
 //    fun checkItemType(): ItemsDefaultCategories {
@@ -74,17 +71,14 @@ class OverViewViewModel : ViewModel() {
         viewModelScope.launch {
             val time = measureTimeMillis {
                 try {
-                    _listOfWeapons.value = EldenBuildApi.retrofitService.getWeapons().data
-                    _weaponStatus.value = "Successfully loaded ${listOfWeapons.value?.size} Weapons"
-                    Log.d(NETWORK_TEST, _weaponStatus.value!!)
+                    _listOfWeapons.value =
+                        EldenBuildApi.retrofitService.getWeapon(20, page = 3).data
 
                 } catch (e: Exception) {
                     Log.d(NETWORK_TEST, "Failure Weapon  : ${e.message}")
                 }
                 try {
                     _listOfArmors.value = EldenBuildApi.retrofitService.getArmors().data
-                    _armorStatus.value = "Successfully loaded ${listOfArmors.value?.size} Armors"
-                    Log.d(NETWORK_TEST, status.value!!)
 
                 } catch (e: Exception) {
                     Log.d(NETWORK_TEST, "Failure Armor  : ${e.message}")
@@ -102,10 +96,10 @@ class OverViewViewModel : ViewModel() {
 //    }
 
     fun setItem(typeOfItem: String) {
-            when (typeOfItem) {
-                Items.ARMOR -> _showItemList.value = listOfArmors.value
-                Items.WEAPON -> _showItemList.value = listOfWeapons.value
-            }
+        when (typeOfItem) {
+            Items.ARMOR -> _showItemList.value = listOfArmors.value
+            Items.WEAPON -> _showItemList.value = listOfWeapons.value
+        }
     }
 
     init {

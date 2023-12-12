@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="typesOfBuilds">
+        <item>@string/arcane_build</item>
+        <item>@string/dexterity_build</item>
+        <item>@string/faith_build</item>
+        <item>@string/strength_build</item>
+        <item>@string/intelligence_build</item>
+    </array>
+
+</resources>

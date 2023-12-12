@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="inputMethod"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="24dp"
+        android:paddingHorizontal="24dp"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:textSize="20sp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:layout_height="wrap_content"
+            android:text="@string/name_and_type_of_the_build"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout1"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/dialog_title"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:hint="@string/build_name"
+            android:layout_weight="1"
+            android:paddingTop="6dp"
+            android:maxWidth="488dp"
+            android:minWidth="346dp"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:inputType="text"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout2"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/input_layout1"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:hint="@string/type_of_build"
+            android:layout_weight="1"
+            android:labelFor="@+id/auto_complete_list"
+            android:maxWidth="488dp"
+            android:minWidth="346dp"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_complete_list"
+                android:layout_width="match_parent"
+                android:inputType="none"
+                app:simpleItems="@array/typesOfBuilds"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
