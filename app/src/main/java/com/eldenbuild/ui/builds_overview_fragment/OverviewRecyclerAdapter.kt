@@ -5,59 +5,49 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.eldenbuild.data.ItemsDefaultCategories
-import com.eldenbuild.databinding.ItemSelectionGridBinding
-import com.google.android.material.card.MaterialCardView
+import com.eldenbuild.data.BuildCategories
+import com.eldenbuild.databinding.BuildSelectionVerticalBinding
 
 const val TAG = "ItemId"
-class OverviewRecyclerAdapter(val itemDetail: (String,Int) -> Unit) :
-    ListAdapter<ItemsDefaultCategories, OverviewRecyclerAdapter.OverViewRecyclerViewHolder>(
-        DiffCallback
-    ) {
 
-    class OverViewRecyclerViewHolder(private var binding: ItemSelectionGridBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-            val card : MaterialCardView = binding.cardItem
-        fun bind(itemsDefaultCategories: ItemsDefaultCategories) {
-            binding.itemImage = itemsDefaultCategories
-            binding.executePendingBindings()
-        }
-    }
+class OverviewRecyclerAdapter(val buildDetail: (String) -> Unit) :
+    ListAdapter<BuildCategories, OverviewRecyclerAdapter.BuildViewHolder>(object :
+        DiffUtil.ItemCallback<BuildCategories>() {
 
-    companion object DiffCallback : DiffUtil.ItemCallback<ItemsDefaultCategories>() {
-        override fun areItemsTheSame(
-            oldItem: ItemsDefaultCategories,
-            newItem: ItemsDefaultCategories
-        ): Boolean {
-
-            return oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: BuildCategories, newItem: BuildCategories): Boolean {
+            return oldItem.buildId == newItem.buildId
         }
 
         override fun areContentsTheSame(
-            oldItem: ItemsDefaultCategories,
-            newItem: ItemsDefaultCategories
+            oldItem: BuildCategories,
+            newItem: BuildCategories
         ): Boolean {
+            return oldItem.buildItems.containsAll(newItem.buildItems)
+        }
 
-            return oldItem.image == newItem.image
+    }) {
+    class BuildViewHolder(val binding: BuildSelectionVerticalBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(buildCategories: BuildCategories) {
+            binding.apply {
+                overViewBuild = buildCategories
+                executePendingBindings()
+            }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverViewRecyclerViewHolder {
-        return OverViewRecyclerViewHolder(
-            ItemSelectionGridBinding.inflate(
-                LayoutInflater.from(
-                    parent.context
-                )
-            )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BuildViewHolder {
+        return BuildViewHolder(
+            BuildSelectionVerticalBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: OverViewRecyclerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BuildViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-        holder.card.setOnClickListener{
-            itemDetail(item.id,item.hashCode())
-
+        holder.itemView.setOnClickListener {
+            buildDetail(item.buildId.toString())
         }
     }
 }

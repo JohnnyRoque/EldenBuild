@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.eldenbuild.data.BuildCategories
 import com.eldenbuild.data.ItemArmors
@@ -19,11 +18,14 @@ import kotlin.system.measureTimeMillis
 const val NETWORK_TEST = "network_test"
 
 class OverViewViewModel : ViewModel() {
-    private val _builds: MutableLiveData<MutableList<BuildCategories>> = MutableLiveData(
-        mutableListOf()
-    )
-    val builds: LiveData<List<BuildCategories>> = _builds.map {
-            it as List<BuildCategories> }
+
+    private val _buildsList: MutableLiveData<List<BuildCategories>> = MutableLiveData(listOf())
+    val buildsList: LiveData<List<BuildCategories>> = _buildsList
+
+
+
+    private val _currentBuild =MutableLiveData<BuildCategories>()
+    val currentBuild : LiveData<BuildCategories> = _currentBuild
 
     private val _itemDetail = MutableLiveData<ItemsDefaultCategories>()
     val itemDetail: LiveData<ItemsDefaultCategories> = _itemDetail
@@ -48,25 +50,27 @@ class OverViewViewModel : ViewModel() {
         }
     }
 
+    fun createNewBuild(title:String,category:String,description:String?){
+        val newItemList = mutableListOf<ItemsDefaultCategories>()
+         val newBuildList:MutableList<BuildCategories> = mutableListOf()
+        _buildsList.value?.let {
+            newBuildList.addAll(it)
+        }
+        newBuildList.add(BuildCategories(title,category,description,newItemList))
+        _buildsList.postValue(newBuildList)
+    }
 
-//    fun checkItemType(): ItemsDefaultCategories {
-//        var count: Int = 0
-//        var text = ""
-//         when (_itemDetail.value) {
-//            is ItemWeapons -> {
-//               val weapon = _itemDetail.value as ItemWeapons
-//                while (count < 6){
-//                    count++
-//                    text = weapon.weight.toString()
-//
-//                }
-//            }
-//            else -> {
-//                _itemDetail.value as ItemArmors
-//            }
-//        }
-//    }
+    fun showBuildDetail(buildId: String){
+        buildsList.value?.let {
+            for (i in 0 .. it.lastIndex){
+                if (buildId == it[i].buildId.toString()){
+                    _currentBuild.value = it[i]
+                    Log.d(TAG, "${currentBuild.value}")
 
+                }
+            }
+        }
+    }
     private fun getItems() {
         viewModelScope.launch {
             val time = measureTimeMillis {
@@ -102,7 +106,7 @@ class OverViewViewModel : ViewModel() {
         }
     }
 
-    init {
-        getItems()
-    }
+//    init {
+//        getItems()
+//    }
 }

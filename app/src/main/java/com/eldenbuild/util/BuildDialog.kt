@@ -16,7 +16,7 @@ object Dialog {
     fun buildCustomDialog(
         context: Context,
         inflater: LayoutInflater,
-        getNameAndType: (String, String) -> Unit
+        getNameAndType: (String, String,String?) -> Unit
     ): AlertDialog {
         val inputM = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val builder = MaterialAlertDialogBuilder(context)
@@ -39,7 +39,8 @@ object Dialog {
         builder.setPositiveButton("Accept") { dialog, _ ->
             getNameAndType(
                 bindingDialog.textName.text.toString(),
-                bindingDialog.autoCompleteList.text.toString()
+                bindingDialog.autoCompleteList.text.toString(),
+                null
             )
             dialog.dismiss()
         }

@@ -40,6 +40,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_name"
                 android:layout_width="match_parent"
+                android:overScrollMode="never"
                 android:inputType="text"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -50,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@id/input_layout1"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:hint="@string/type_of_build"
-            android:layout_weight="1"
+            android:layout_marginTop="8dp"
             android:labelFor="@+id/auto_complete_list"
             android:maxWidth="488dp"
             android:minWidth="346dp"
@@ -60,6 +61,7 @@
                 android:id="@+id/auto_complete_list"
                 android:layout_width="match_parent"
                 android:inputType="none"
+                android:text="@string/arcane_build"
                 app:simpleItems="@array/typesOfBuilds"
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>

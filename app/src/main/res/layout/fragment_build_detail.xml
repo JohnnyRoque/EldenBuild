@@ -7,8 +7,6 @@
         <variable
             name="viewModel"
             type="com.eldenbuild.viewmodel.OverViewViewModel" />
-        
-
 
     </data>
     <com.google.android.material.card.MaterialCardView
@@ -25,6 +23,7 @@
                 android:id="@+id/build_detail_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:src="@drawable/baseline_add_24"
                 android:adjustViewBounds="true"
                 android:importantForAccessibility="no"
                 app:layout_constraintTop_toTopOf="parent"
@@ -34,6 +33,7 @@
             <TextView
                 android:id="@+id/build_detail_title"
                 android:layout_width="0dp"
+                android:text="@{viewModel.currentBuild.title}"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:textAppearance="?attr/textAppearanceButton"
@@ -51,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
+                android:text="@{viewModel.currentBuild.category}"
                 android:textAppearance="?attr/textAppearanceButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +69,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/build_detail_category"
-                app:listData="@{viewModel.showItemList}"
                 app:spanCount="2"
                 tools:listitem="@layout/item_selection_carousel" />
 

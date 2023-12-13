@@ -7,6 +7,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.eldenbuild.R
+import com.eldenbuild.data.BuildCategories
 import com.eldenbuild.data.ItemsDefaultCategories
 import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -15,20 +16,27 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 fun bindingImage(imageView: ImageView, imgUrl: String?) {
     imgUrl?.let {
         val imageUri = imgUrl.toUri().buildUpon().scheme("https").build()
-        imageView.load(imageUri){
+        imageView.load(imageUri) {
             placeholder(R.drawable.loading_animation)
             error(R.drawable.ic_broken_image)
         }
     }
 }
-@BindingAdapter("listData")
-fun bindRecyclerView(recyclerView: RecyclerView, data: List<ItemsDefaultCategories>?) {
+
+@BindingAdapter("buildList")
+fun bindRecyclerView(recyclerView: RecyclerView, data: List<BuildCategories>?) {
     val adapter = recyclerView.adapter as OverviewRecyclerAdapter
     adapter.submitList(data)
 }
+
+@BindingAdapter("itemList")
+fun bindItemListToRecyclerView(recyclerView: RecyclerView, data: List<ItemsDefaultCategories>) {
+    val adapter = recyclerView.adapter
+}
+
 @BindingAdapter("menuList")
-fun bindListToMenu(autoCompleteTextView: AutoCompleteTextView,list:Array<String>){
-(autoCompleteTextView as MaterialAutoCompleteTextView).setSimpleItems(list)
+fun bindListToMenu(autoCompleteTextView: AutoCompleteTextView, list: Array<String>) {
+    (autoCompleteTextView as MaterialAutoCompleteTextView).setSimpleItems(list)
 }
 
 

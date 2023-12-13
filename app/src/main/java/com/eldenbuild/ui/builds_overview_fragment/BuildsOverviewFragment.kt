@@ -38,10 +38,16 @@ class BuildsOverviewFragment : Fragment() {
 
         }
         binding.addBuildFab.setOnClickListener {
-            Dialog.buildCustomDialog(requireContext(),layoutInflater,){name,type ->
-                binding.slidingPaneLayout.openPane()
+            Dialog.buildCustomDialog(requireContext(),layoutInflater,){name,type,description ->
+                sharedViewModel.createNewBuild(name,type,description)
                 Log.d(TAG,"$name and $type")
+                Log.d(TAG,"${sharedViewModel.buildsList.value}")
             }
+        }
+
+        binding.buildRecyclerView.adapter = OverviewRecyclerAdapter{
+            sharedViewModel.showBuildDetail(it)
+            binding.slidingPaneLayout.openPane()
         }
         super.onViewCreated(view, savedInstanceState)
     }

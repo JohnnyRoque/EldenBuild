@@ -6,6 +6,10 @@
 
     <data>
 
+        <variable
+            name="overViewBuild"
+            type="com.eldenbuild.data.BuildCategories" />
+
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -17,13 +21,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="150dp">
 
             <ImageView
                 android:id="@+id/build_image"
                 android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:adjustViewBounds="false"
+                android:layout_height="0dp"
+                android:src="@drawable/baseline_add_24"
+                android:adjustViewBounds="true"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -35,7 +40,9 @@
                 android:id="@+id/build_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadline6"
                 android:padding="10dp"
+                android:text="@{overViewBuild.title}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/build_image"
                 app:layout_constraintTop_toTopOf="parent"
@@ -44,8 +51,10 @@
             <TextView
                 android:id="@+id/build_category"
                 android:layout_width="0dp"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:text="@{overViewBuild.category}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/build_image"
                 app:layout_constraintTop_toBottomOf="@id/build_title"
