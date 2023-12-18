@@ -38,6 +38,7 @@ class BuildDetailFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
         }
+        binding.itemSelectionCarousel.adapter = CarouselAdapter()
         val snapHelper = CarouselSnapHelper()
         snapHelper.attachToRecyclerView(binding.itemSelectionCarousel)
         super.onViewCreated(view, savedInstanceState)

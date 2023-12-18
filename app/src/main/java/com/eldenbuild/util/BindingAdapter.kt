@@ -39,6 +39,10 @@ fun bindListToMenu(autoCompleteTextView: AutoCompleteTextView, list: Array<Strin
     (autoCompleteTextView as MaterialAutoCompleteTextView).setSimpleItems(list)
 }
 
+@BindingAdapter("imageInt")
+fun setImageInt(imageView: ImageView,image:Int){
+    imageView.setImageResource(image)
+}
 
 
 

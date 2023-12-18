@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="imagesB"
+            type="com.eldenbuild.data.ListOfImagesCarousel" />
 
     </data>
 
@@ -19,6 +22,7 @@
             android:id="@+id/carousel_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            imageInt="@{imagesB.image}"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
@@ -29,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:text="@{imagesB.text}"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textAppearance="?attr/textAppearanceHeadline6"

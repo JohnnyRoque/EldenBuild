@@ -9,3 +9,5 @@ data class BuildCategories(
     val buildItems: MutableList<ItemsDefaultCategories>,
     val buildId : UUID = UUID.randomUUID()
 )
+
+data class ListOfImagesCarousel(val image:Int,val text:String)
