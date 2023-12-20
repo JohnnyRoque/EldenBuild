@@ -22,8 +22,6 @@ class OverViewViewModel : ViewModel() {
     private val _buildsList: MutableLiveData<List<BuildCategories>> = MutableLiveData(listOf())
     val buildsList: LiveData<List<BuildCategories>> = _buildsList
 
-
-
     private val _currentBuild =MutableLiveData<BuildCategories>()
     val currentBuild : LiveData<BuildCategories> = _currentBuild
 
@@ -37,7 +35,7 @@ class OverViewViewModel : ViewModel() {
     private val listOfWeapons: LiveData<List<ItemWeapons>> = _listOfWeapons
 
     private val _listOfArmors: MutableLiveData<List<ItemArmors>> = MutableLiveData()
-    private val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
+     val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
     fun showItemDetail(itemId: String) {
         _showItemList.value?.let {
             for (i in 0..it.lastIndex) {

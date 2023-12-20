@@ -25,16 +25,17 @@ class MainActivity : AppCompatActivity() {
 
 class SlidingPaneOnBackPressedCallback(
     private val slidingPaneLayout: SlidingPaneLayout
-) : OnBackPressedCallback(slidingPaneLayout.isSlideable && slidingPaneLayout.isOpen),
+) : OnBackPressedCallback(slidingPaneLayout.isEnabled && slidingPaneLayout.isOpen),
     SlidingPaneLayout.PanelSlideListener {
         init {
             slidingPaneLayout.addPanelSlideListener(this)
         }
     override fun handleOnBackPressed() {
-        slidingPaneLayout.closePane()
+            slidingPaneLayout.closePane()
     }
 
     override fun onPanelSlide(panel: View, slideOffset: Float) {
+
     }
 
     override fun onPanelOpened(panel: View) {

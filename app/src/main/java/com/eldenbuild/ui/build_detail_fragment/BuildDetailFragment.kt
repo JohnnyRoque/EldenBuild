@@ -38,6 +38,14 @@ class BuildDetailFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
         }
+        sharedViewModel.currentBuild.observe(viewLifecycleOwner){
+            if (it.buildItems.isNotEmpty()){
+                binding.itemSelectionGridRecycler.visibility = View.VISIBLE
+                binding.placeholderImage.visibility = View.GONE
+                binding.placeholderTextView.visibility = View.GONE
+            }
+        }
+        binding.itemSelectionGridRecycler.adapter = BuildItemsGridAdapter()
         binding.itemSelectionCarousel.adapter = CarouselAdapter()
         val snapHelper = CarouselSnapHelper()
         snapHelper.attachToRecyclerView(binding.itemSelectionCarousel)

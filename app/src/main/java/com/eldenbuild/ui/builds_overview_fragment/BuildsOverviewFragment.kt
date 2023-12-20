@@ -16,24 +16,31 @@ import com.eldenbuild.util.Items
 import com.eldenbuild.viewmodel.OverViewViewModel
 
 class BuildsOverviewFragment : Fragment() {
+
     private var _binding: FragmentBuildsOverviewBinding? = null
     private val binding get() = _binding!!
     private val sharedViewModel: OverViewViewModel by activityViewModels()
 
-    override fun onCreateView (
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_builds_overview, container, false)
-        return binding.root
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             SlidingPaneOnBackPressedCallback(binding.slidingPaneLayout)
         )
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        if (sharedViewModel.buildsList.value!!.isEmpty()){
+            binding.detailNavHost.visibility = View.GONE
+        }
+
         binding.apply {
             viewModel = sharedViewModel
             lifecycleOwner = viewLifecycleOwner
@@ -42,6 +49,7 @@ class BuildsOverviewFragment : Fragment() {
         }
 
         binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
+
         binding.addBuildFab.setOnClickListener {
             Dialog.buildCustomDialog(requireContext(), layoutInflater) { name, type, description ->
                 sharedViewModel.createNewBuild(name, type, description)
@@ -50,8 +58,8 @@ class BuildsOverviewFragment : Fragment() {
 
         binding.buildRecyclerView.adapter = OverviewRecyclerAdapter(requireContext()) {
             sharedViewModel.showBuildDetail(it)
+            binding.detailNavHost.visibility = View.VISIBLE
             if (!binding.slidingPaneLayout.isOpen) {
-                binding.addBuildFab.visibility = View.GONE
                 binding.slidingPaneLayout.openPane()
             }
         }

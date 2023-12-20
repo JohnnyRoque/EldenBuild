@@ -1,0 +1,52 @@
+package com.eldenbuild.ui.build_detail_fragment
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.eldenbuild.data.ItemsDefaultCategories
+import com.eldenbuild.databinding.ItemSelectionGridBinding
+
+class BuildItemsGridAdapter :
+    ListAdapter<ItemsDefaultCategories, BuildItemsGridAdapter.BuildItemsViewHolder>(object :
+        DiffUtil.ItemCallback<ItemsDefaultCategories>() {
+        override fun areItemsTheSame(
+            oldItem: ItemsDefaultCategories,
+            newItem: ItemsDefaultCategories
+        ): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(
+            oldItem: ItemsDefaultCategories,
+            newItem: ItemsDefaultCategories
+        ): Boolean {
+            return oldItem.image == newItem.image
+        }
+    }) {
+    class BuildItemsViewHolder(val binding: ItemSelectionGridBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(itemsDefaultCategories: ItemsDefaultCategories) {
+            binding.apply {
+                itemImage = itemsDefaultCategories
+                executePendingBindings()
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BuildItemsViewHolder {
+        return BuildItemsViewHolder(
+            ItemSelectionGridBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
+    }
+
+    override fun onBindViewHolder(holder: BuildItemsViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.bind(item)
+    }
+}

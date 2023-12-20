@@ -25,4 +25,5 @@
     <string name="toast_text">To create a class inform the name and type</string>
     <string name="accept_text">accept</string>
     <string name="cancel_text">Cancel</string>
+    <string name="placeholder_text">Brave Tarnished.\nIt seems your build it\'s empty.</string>
 </resources>

@@ -9,6 +9,7 @@ import coil.load
 import com.eldenbuild.R
 import com.eldenbuild.data.BuildCategories
 import com.eldenbuild.data.ItemsDefaultCategories
+import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
 import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 
@@ -17,7 +18,7 @@ fun bindingImage(imageView: ImageView, imgUrl: String?) {
     imgUrl?.let {
         val imageUri = imgUrl.toUri().buildUpon().scheme("https").build()
         imageView.load(imageUri) {
-            placeholder(R.drawable.loading_animation)
+            (R.drawable.loading_animation)
             error(R.drawable.ic_broken_image)
         }
     }
@@ -30,8 +31,12 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<BuildCategories>?) {
 }
 
 @BindingAdapter("itemList")
-fun bindItemListToRecyclerView(recyclerView: RecyclerView, data: List<ItemsDefaultCategories>) {
-    val adapter = recyclerView.adapter
+fun bindItemListToRecyclerView(
+    recyclerView: RecyclerView,
+    data: MutableList<ItemsDefaultCategories>?
+) {
+    val adapter = recyclerView.adapter as BuildItemsGridAdapter
+    adapter.submitList(data)
 }
 
 @BindingAdapter("menuList")
@@ -40,7 +45,7 @@ fun bindListToMenu(autoCompleteTextView: AutoCompleteTextView, list: Array<Strin
 }
 
 @BindingAdapter("imageInt")
-fun setImageInt(imageView: ImageView,image:Int){
+fun setImageInt(imageView: ImageView, image: Int) {
     imageView.setImageResource(image)
 }
 
