@@ -82,10 +82,10 @@
             <ImageView
                 android:id="@+id/placeholder_image"
                 android:layout_width="0dp"
-                android:paddingTop="16dp"
-                android:importantForAccessibility="no"
                 android:layout_height="300dp"
                 android:adjustViewBounds="true"
+                android:importantForAccessibility="no"
+                android:paddingTop="24dp"
                 android:src="@drawable/eldenring_iji"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -95,14 +95,14 @@
             <TextView
                 android:id="@+id/placeholder_text_view"
                 android:layout_width="0dp"
-                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="@string/placeholder_text"
                 android:textAlignment="center"
                 android:textAppearance="?attr/textAppearanceHeadline6"
-                android:layout_height="wrap_content"
-                android:text="@string/placeholder_text"
-                app:layout_constraintTop_toBottomOf="@id/placeholder_image"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeholder_image" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

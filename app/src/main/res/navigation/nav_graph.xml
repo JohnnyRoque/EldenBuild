@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_buildsOverviewFragment_to_buildDetailFragment"
             app:destination="@id/buildDetailFragment" />
+        <action
+            android:id="@+id/action_buildsOverviewFragment_to_customizeBuildFragment"
+            app:destination="@id/customizeBuildFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemDetailsFragment"
@@ -21,9 +24,13 @@
     <fragment
         android:id="@+id/buildDetailFragment"
         android:name="com.eldenbuild.ui.build_detail_fragment.BuildDetailFragment"
-        android:label="BuildDetailFragment" >
+        android:label="BuildDetailFragment" />
+    <fragment
+        android:id="@+id/customizeBuildFragment"
+        android:name="com.eldenbuild.ui.customize_build_fragment.CustomizeBuildFragment"
+        android:label="CustomizeBuildFragment" >
         <action
-            android:id="@+id/action_buildDetailFragment_to_itemDetailsFragment"
+            android:id="@+id/action_customizeBuildFragment_to_itemDetailsFragment"
             app:destination="@id/itemDetailsFragment" />
     </fragment>
 </navigation>

@@ -243,6 +243,15 @@
             tools:itemCount="3"
             tools:listitem="@layout/stats_view_design" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_to_build_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceButton"
+            android:text="@string/add_to_build_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

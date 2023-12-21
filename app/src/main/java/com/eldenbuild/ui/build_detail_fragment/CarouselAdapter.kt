@@ -7,7 +7,7 @@ import com.eldenbuild.R
 import com.eldenbuild.data.ListOfImagesCarousel
 import com.eldenbuild.databinding.ItemSelectionCarouselBinding
 
-class CarouselAdapter : RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>() {
+class CarouselAdapter(val navToCustomizeBuild: (String) -> Unit) : RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>() {
 
     private val listOfImages =
         listOf(
@@ -40,6 +40,9 @@ class CarouselAdapter : RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>
     override fun onBindViewHolder(holder: CarouselViewHolder, position: Int) {
         val item = listOfImages[position]
         holder.bind(item)
+        holder.itemView.setOnClickListener {
+            navToCustomizeBuild(item.text)
+        }
     }
 }
 

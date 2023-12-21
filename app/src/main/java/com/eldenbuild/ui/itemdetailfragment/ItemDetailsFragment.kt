@@ -1,11 +1,11 @@
 package com.eldenbuild.ui.itemdetailfragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.eldenbuild.R
@@ -36,6 +36,11 @@ class ItemDetailsFragment : Fragment() {
         val amountAdapter2 = StatsAmountAdapter(requireContext())
         val scalingAdapter = StatsScalingAdapter(requireContext())
         val amountAdapter3 = StatsAmountAdapter(requireContext())
+
+        binding.addToBuildButton.setOnClickListener{
+            sharedViewMode.itemDetail.value?.let {sharedViewMode.addItemToBuild(it)  }
+        }
+
 
 
 

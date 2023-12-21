@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.eldenbuild.data.ItemsDefaultCategories
 import com.eldenbuild.databinding.ItemSelectionGridBinding
 
-class BuildItemsGridAdapter :
+class BuildItemsGridAdapter(val openItemDetail: (String) -> Unit) :
     ListAdapter<ItemsDefaultCategories, BuildItemsGridAdapter.BuildItemsViewHolder>(object :
         DiffUtil.ItemCallback<ItemsDefaultCategories>() {
         override fun areItemsTheSame(
@@ -27,6 +27,8 @@ class BuildItemsGridAdapter :
     }) {
     class BuildItemsViewHolder(val binding: ItemSelectionGridBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        val card = binding.cardItem
+
         fun bind(itemsDefaultCategories: ItemsDefaultCategories) {
             binding.apply {
                 itemImage = itemsDefaultCategories
@@ -48,5 +50,8 @@ class BuildItemsGridAdapter :
     override fun onBindViewHolder(holder: BuildItemsViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+        holder.card.setOnClickListener {
+            openItemDetail(item.id)
+        }
     }
 }

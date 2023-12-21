@@ -12,7 +12,6 @@ import com.eldenbuild.R
 import com.eldenbuild.databinding.FragmentBuildsOverviewBinding
 import com.eldenbuild.ui.SlidingPaneOnBackPressedCallback
 import com.eldenbuild.util.Dialog
-import com.eldenbuild.util.Items
 import com.eldenbuild.viewmodel.OverViewViewModel
 
 class BuildsOverviewFragment : Fragment() {
@@ -44,12 +43,9 @@ class BuildsOverviewFragment : Fragment() {
         binding.apply {
             viewModel = sharedViewModel
             lifecycleOwner = viewLifecycleOwner
-            armor = Items.ARMOR
-            weapon = Items.WEAPON
         }
 
         binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-
         binding.addBuildFab.setOnClickListener {
             Dialog.buildCustomDialog(requireContext(), layoutInflater) { name, type, description ->
                 sharedViewModel.createNewBuild(name, type, description)

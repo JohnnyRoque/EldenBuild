@@ -14,7 +14,6 @@
 
     </data>
 
-
         <TextView
             android:id="@+id/stats_text_name"
             tools:text="NAME"

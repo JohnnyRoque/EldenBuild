@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.eldenbuild.data.BuildCategories
 import com.eldenbuild.data.ItemArmors
@@ -29,13 +30,16 @@ class OverViewViewModel : ViewModel() {
     val itemDetail: LiveData<ItemsDefaultCategories> = _itemDetail
 
     private val _showItemList = MutableLiveData<List<ItemsDefaultCategories>>()
-    val showItemList: LiveData<List<ItemsDefaultCategories>> = _showItemList
+    val showItemList: LiveData<List<ItemsDefaultCategories>> = _showItemList.map { list ->
+        list.sortedBy { it.category }
+    }
 
     private val _listOfWeapons: MutableLiveData<List<ItemWeapons>> = MutableLiveData()
     private val listOfWeapons: LiveData<List<ItemWeapons>> = _listOfWeapons
 
     private val _listOfArmors: MutableLiveData<List<ItemArmors>> = MutableLiveData()
-     val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
+     private val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
+
     fun showItemDetail(itemId: String) {
         _showItemList.value?.let {
             for (i in 0..it.lastIndex) {
@@ -69,6 +73,11 @@ class OverViewViewModel : ViewModel() {
             }
         }
     }
+    fun addItemToBuild(item:ItemsDefaultCategories){
+        _currentBuild.value?.let {
+            it.buildItems.add(item)
+        }
+    }
     private fun getItems() {
         viewModelScope.launch {
             val time = measureTimeMillis {
@@ -89,13 +98,6 @@ class OverViewViewModel : ViewModel() {
             Log.d("Teste", "Time = $time")
         }
     }
-//
-//   private suspend fun setImage(){
-//        for (i in (0..listOfArmors.value!!.lastIndex)){
-//            delay(2000L)
-//            _armorPhoto.value = listOfArmors.value!![i]
-//        }
-//    }
 
     fun setItem(typeOfItem: String) {
         when (typeOfItem) {
@@ -103,8 +105,7 @@ class OverViewViewModel : ViewModel() {
             Items.WEAPON -> _showItemList.value = listOfWeapons.value
         }
     }
-
-//    init {
-//        getItems()
-//    }
+    init {
+        getItems()
+    }
 }
