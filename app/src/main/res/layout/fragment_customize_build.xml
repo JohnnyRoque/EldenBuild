@@ -8,21 +8,39 @@
             name="viewModel"
             type="com.eldenbuild.viewmodel.OverViewViewModel" />
 
+        <variable
+            name="label"
+            type="String" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/label_text"
+            android:layout_width="wrap_content"
+            android:layout_margin="16dp"
+            android:textSize="20sp"
+            android:text="@{label}"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:layout_insetEdge="top"
+            android:layout_height="wrap_content"
+            tools:text="Equipment"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_anchorGravity="bottom"
+            app:layout_anchor="@id/label_text"
+            app:layout_dodgeInsetEdges="top"
             android:padding="6dp"
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:itemList="@{viewModel.showItemList}"
-            app:spanCount="3"
+            app:spanCount="4"
             tools:listitem="@layout/item_selection_grid"
             android:clipToPadding="true"/>
 
@@ -31,8 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-            app:menu="@menu/bottom_navigation_menu" />
+            tools:menu="@menu/bottom_navigation_menu"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

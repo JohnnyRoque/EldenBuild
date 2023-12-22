@@ -23,8 +23,8 @@ class OverViewViewModel : ViewModel() {
     private val _buildsList: MutableLiveData<List<BuildCategories>> = MutableLiveData(listOf())
     val buildsList: LiveData<List<BuildCategories>> = _buildsList
 
-    private val _currentBuild =MutableLiveData<BuildCategories>()
-    val currentBuild : LiveData<BuildCategories> = _currentBuild
+    private val _currentBuild = MutableLiveData<BuildCategories>()
+    val currentBuild: LiveData<BuildCategories> = _currentBuild
 
     private val _itemDetail = MutableLiveData<ItemsDefaultCategories>()
     val itemDetail: LiveData<ItemsDefaultCategories> = _itemDetail
@@ -38,7 +38,7 @@ class OverViewViewModel : ViewModel() {
     private val listOfWeapons: LiveData<List<ItemWeapons>> = _listOfWeapons
 
     private val _listOfArmors: MutableLiveData<List<ItemArmors>> = MutableLiveData()
-     private val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
+    private val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
 
     fun showItemDetail(itemId: String) {
         _showItemList.value?.let {
@@ -52,20 +52,20 @@ class OverViewViewModel : ViewModel() {
         }
     }
 
-    fun createNewBuild(title:String,category:String,description:String?){
+    fun createNewBuild(title: String, category: String, description: String?) {
         val newItemList = mutableListOf<ItemsDefaultCategories>()
-         val newBuildList:MutableList<BuildCategories> = mutableListOf()
+        val newBuildList: MutableList<BuildCategories> = mutableListOf()
         _buildsList.value?.let {
             newBuildList.addAll(it)
         }
-        newBuildList.add(BuildCategories(title,category,description,newItemList))
+        newBuildList.add(BuildCategories(title, category, description, newItemList))
         _buildsList.postValue(newBuildList)
     }
 
-    fun showBuildDetail(buildId: String){
+    fun showBuildDetail(buildId: String) {
         buildsList.value?.let {
-            for (i in 0 .. it.lastIndex){
-                if (buildId == it[i].buildId.toString()){
+            for (i in 0..it.lastIndex) {
+                if (buildId == it[i].buildId.toString()) {
                     _currentBuild.value = it[i]
                     Log.d(TAG, "${currentBuild.value}")
 
@@ -73,11 +73,20 @@ class OverViewViewModel : ViewModel() {
             }
         }
     }
-    fun addItemToBuild(item:ItemsDefaultCategories){
-        _currentBuild.value?.let {
-            it.buildItems.add(item)
+
+    fun addItemToBuild(item: ItemsDefaultCategories):String {
+        var message: String
+        try {
+            _currentBuild.value!!.buildItems.add(item)
+            message = "Item added to build"
+
+        } catch (e:Exception) {
+            message ="Failure"
+            Log.d(TAG,"$e")
         }
+        return message
     }
+
     private fun getItems() {
         viewModelScope.launch {
             val time = measureTimeMillis {
@@ -105,6 +114,7 @@ class OverViewViewModel : ViewModel() {
             Items.WEAPON -> _showItemList.value = listOfWeapons.value
         }
     }
+
     init {
         getItems()
     }

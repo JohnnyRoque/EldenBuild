@@ -28,7 +28,7 @@ private val retrofit = Retrofit.Builder()
     suspend fun queryItem(@Query("name") itemName:String) : WeaponResponse
 }
 
-object EldenBuildApi{
+object EldenBuildApi {
     val retrofitService : EldenBuildApiService by lazy {
         retrofit.create(EldenBuildApiService::class.java)
     }

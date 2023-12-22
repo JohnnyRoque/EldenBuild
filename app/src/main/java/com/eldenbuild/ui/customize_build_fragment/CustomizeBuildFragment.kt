@@ -16,12 +16,19 @@ import com.eldenbuild.ui.builds_overview_fragment.TAG
 import com.eldenbuild.util.Items
 import com.eldenbuild.viewmodel.OverViewViewModel
 
+const val CUSTOMIZE_LABEL = "customizeLabel"
 
 class CustomizeBuildFragment : Fragment() {
-
+    private var argumentLabel: String? = null
     private var _binding: FragmentCustomizeBuildBinding? = null
     val binding get() = _binding!!
     private val sharedViewModel: OverViewViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        argumentLabel = arguments?.getString(CUSTOMIZE_LABEL)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,40 +54,87 @@ class CustomizeBuildFragment : Fragment() {
         }
         binding.apply {
             viewModel = sharedViewModel
+            label = argumentLabel
             lifecycleOwner = viewLifecycleOwner
+
         }
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.page_1 -> {
-                    sharedViewModel.setItem(Items.WEAPON)
-                    Log.d(TAG, "${sharedViewModel.showItemList.value}")
-                    true
-                }
 
-                R.id.page_2 -> {
-                    sharedViewModel.setItem(Items.ARMOR)
-                    Log.d(TAG, "${sharedViewModel.showItemList.value}")
-                    true
-                }
+        when (argumentLabel) {
+            "Equipment" -> {
+                binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu)
+                binding.bottomNavigation.setOnItemSelectedListener { item ->
+                    when (item.itemId) {
+                        R.id.page_1 -> {
+                            sharedViewModel.setItem(Items.WEAPON)
+                            Log.d(TAG, "${sharedViewModel.showItemList.value}")
+                            true
+                        }
 
-                else -> false
+                        R.id.page_2 -> {
+                            sharedViewModel.setItem(Items.ARMOR)
+                            Log.d(TAG, "${sharedViewModel.showItemList.value}")
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+                binding.bottomNavigation.setOnItemReselectedListener { item ->
+                    when (item.itemId) {
+                        R.id.page_1 -> {
+                            sharedViewModel.setItem(Items.WEAPON)
+                            Log.d(TAG, "PAGE1")
+
+                        }
+
+                        R.id.page_2 -> {
+                            sharedViewModel.setItem(Items.ARMOR)
+                            Log.d(TAG, "PAGE2")
+
+                        }
+                    }
+                }
             }
-        }
-        binding.bottomNavigation.setOnItemReselectedListener { item ->
-            when (item.itemId) {
-                R.id.page_1 -> {
-                    sharedViewModel.setItem(Items.WEAPON)
-                    Log.d(TAG, "PAGE1")
 
+            "Magic" -> {
+                binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu_magic)
+                binding.bottomNavigation.setOnItemSelectedListener { item ->
+                    when (item.itemId) {
+                        R.id.page_1 -> {
+                            sharedViewModel.setItem(Items.WEAPON)
+                            Log.d(TAG, "${sharedViewModel.showItemList.value}")
+                            true
+                        }
+
+                        R.id.page_2 -> {
+                            sharedViewModel.setItem(Items.ARMOR)
+                            Log.d(TAG, "${sharedViewModel.showItemList.value}")
+                            true
+                        }
+
+                        else -> false
+                    }
                 }
+                binding.bottomNavigation.setOnItemReselectedListener { item ->
+                    when (item.itemId) {
+                        R.id.page_1 -> {
+                            sharedViewModel.setItem(Items.WEAPON)
+                            Log.d(TAG, "PAGE1")
 
-                R.id.page_2 -> {
-                    sharedViewModel.setItem(Items.ARMOR)
-                    Log.d(TAG, "PAGE2")
+                        }
 
+                        R.id.page_2 -> {
+                            sharedViewModel.setItem(Items.ARMOR)
+                            Log.d(TAG, "PAGE2")
+
+                        }
+                    }
                 }
             }
-
+            else -> {
+                binding.itemRecyclerView.visibility = View.INVISIBLE
+                binding.bottomNavigation.visibility = View.INVISIBLE
+            }
         }
 
         super.onViewCreated(view, savedInstanceState)

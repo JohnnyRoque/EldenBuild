@@ -32,5 +32,8 @@
         <action
             android:id="@+id/action_customizeBuildFragment_to_itemDetailsFragment"
             app:destination="@id/itemDetailsFragment" />
+        <argument
+            android:name="customizeLabel"
+            app:argType="string" />
     </fragment>
 </navigation>

@@ -31,4 +31,7 @@
     <string name="talismans_text">Talismans</string>
     <string name="ammo_text">Ammo</string>
     <string name="add_to_build_text">Add to Build</string>
+    <string name="incantations_text">Incantations</string>
+    <string name="sorceries_text">Sorceries</string>
+    <string name="spirits_text">Spirits</string>
 </resources>

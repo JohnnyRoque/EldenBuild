@@ -5,24 +5,19 @@
         android:id="@+id/page_1"
         android:enabled="true"
         android:icon="@drawable/baseline_add_24"
-        android:title="@string/weapons_text" />
+        android:title="@string/incantations_text" />
 
     <item
         android:id="@+id/page_2"
         android:enabled="true"
         android:icon="@drawable/baseline_add_24"
-        android:title="@string/armors_text" />
+        android:title="@string/sorceries_text" />
 
     <item
         android:id="@+id/page_3"
         android:enabled="true"
         android:icon="@drawable/baseline_add_24"
-        android:title="@string/talismans_text" />
+        android:title="@string/spirits_text" />
 
-    <item
-        android:id="@+id/page_4"
-        android:enabled="true"
-        android:icon="@drawable/baseline_add_24"
-        android:title="@string/ammo_text" />
 
 </menu>
