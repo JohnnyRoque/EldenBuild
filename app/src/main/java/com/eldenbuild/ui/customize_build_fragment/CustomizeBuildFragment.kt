@@ -46,19 +46,22 @@ class CustomizeBuildFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        binding.itemRecyclerView.adapter = BuildItemsGridAdapter() {
+        binding.apply {
+            viewModel = sharedViewModel
+            label = argumentLabel
+            lifecycleOwner = viewLifecycleOwner
+        }
+
+        binding.itemRecyclerView.adapter = BuildItemsGridAdapter {
             sharedViewModel.showItemDetail(it)
             findNavController().navigate(
                 CustomizeBuildFragmentDirections.actionCustomizeBuildFragmentToItemDetailsFragment()
             )
         }
-        binding.apply {
-            viewModel = sharedViewModel
-            label = argumentLabel
-            lifecycleOwner = viewLifecycleOwner
 
+        binding.statusRecyclerView.adapter = BuildStatusAdapter{ attName, isInc, ->
+            sharedViewModel.setNewAttribute(attName, isInc)
         }
-
         when (argumentLabel) {
             "Equipment" -> {
                 binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu)
@@ -98,6 +101,7 @@ class CustomizeBuildFragment : Fragment() {
 
             "Magic" -> {
                 binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu_magic)
+
                 binding.bottomNavigation.setOnItemSelectedListener { item ->
                     when (item.itemId) {
                         R.id.page_1 -> {
@@ -115,6 +119,7 @@ class CustomizeBuildFragment : Fragment() {
                         else -> false
                     }
                 }
+
                 binding.bottomNavigation.setOnItemReselectedListener { item ->
                     when (item.itemId) {
                         R.id.page_1 -> {
@@ -131,15 +136,18 @@ class CustomizeBuildFragment : Fragment() {
                     }
                 }
             }
+
             else -> {
-                binding.itemRecyclerView.visibility = View.INVISIBLE
-                binding.bottomNavigation.visibility = View.INVISIBLE
+
+                binding.statusRecyclerView.visibility = View.VISIBLE
+                binding.dividerStatus1.visibility = View.VISIBLE
+                binding.itemRecyclerView.visibility = View.GONE
+                binding.bottomNavigation.visibility = View.GONE
+
             }
         }
-
         super.onViewCreated(view, savedInstanceState)
     }
-
 
     override fun onDestroyView() {
         _binding = null

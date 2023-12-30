@@ -20,7 +20,7 @@ class CarouselAdapter(val navToCustomizeBuild: (String) -> Unit) : RecyclerView.
         RecyclerView.ViewHolder(binding.root) {
         val image = binding.carouselImage
 
-        fun bind(listOfImagesCarousel: ListOfImagesCarousel){
+        fun bind(listOfImagesCarousel: ListOfImagesCarousel) {
             binding.apply {
                 imagesB = listOfImagesCarousel
                 executePendingBindings()

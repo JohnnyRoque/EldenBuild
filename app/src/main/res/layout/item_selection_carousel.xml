@@ -12,7 +12,7 @@
 
     <com.google.android.material.carousel.MaskableFrameLayout
         android:id="@+id/carousel_frame_layout"
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_marginHorizontal="4dp"
         android:layout_height="match_parent"
         android:clickable="true"

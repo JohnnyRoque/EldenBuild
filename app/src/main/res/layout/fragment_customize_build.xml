@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.eldenbuild.viewmodel.OverViewViewModel" />
@@ -16,41 +17,84 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
+        android:id="@+id/layout_coordinator1"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/label_text"
-            android:layout_width="wrap_content"
-            android:layout_margin="16dp"
-            android:textSize="20sp"
-            android:text="@{label}"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:layout_insetEdge="top"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Equipment"/>
+            app:layout_insetEdge="top"
+            app:liftOnScrollTargetViewId="@id/item_recycler_view">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:title="@{label}"
+                tools:title="Title"
+                />
+        </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_anchorGravity="bottom"
-            app:layout_anchor="@id/label_text"
-            app:layout_dodgeInsetEdges="top"
-            android:padding="6dp"
+            android:layout_marginBottom="70dp"
+            android:clipToPadding="true"
             android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:padding="8dp"
             app:itemList="@{viewModel.showItemList}"
-            app:spanCount="4"
-            tools:listitem="@layout/item_selection_grid"
-            android:clipToPadding="true"/>
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_dodgeInsetEdges="top"
+            app:spanCount="5"
+            tools:listitem="@layout/item_selection_grid" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            tools:menu="@menu/bottom_navigation_menu"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:layout_insetEdge="bottom"
+            tools:menu="@menu/bottom_navigation_menu" />
+
+
+        <View
+            android:id="@+id/divider_status1"
+            android:layout_width="1dp"
+            android:layout_height="270dp"
+            android:layout_marginStart="20dp"
+            android:background="@color/line_color"
+            android:visibility="invisible"
+            app:layout_dodgeInsetEdges="top"
+            app:layout_insetEdge="start" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/status_recycler_view"
+            app:statusList="@{viewModel.currentBuild.buildCharacterStatus}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="true"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:padding="6dp"
+            android:visibility="invisible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_dodgeInsetEdges="top|start"
+            tools:itemCount="8"
+            tools:listitem="@layout/build_status_horizontal" />
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab_edit"-->
+<!--            style="@style/Widget.Material3.FloatingActionButton.Large.Primary"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom|end"-->
+<!--            android:layout_margin="16dp"-->
+<!--            android:src="@drawable/edit_24px"-->
+<!--            android:contentDescription="@string/edit_status_text" />-->
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

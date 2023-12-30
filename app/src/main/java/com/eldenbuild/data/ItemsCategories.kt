@@ -34,7 +34,7 @@ data class ItemWeapons(
     val requiredAttributes: List<StatsAmount>,
 ) : ItemsDefaultCategories
 
-data class StatsAmount(val name: String, val amount: Int)
+data class StatsAmount(val name: String, var amount: Int)
 data class StatsScaling(val name: String, val scaling: String = "")
 
 

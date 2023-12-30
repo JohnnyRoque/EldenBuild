@@ -1,15 +1,18 @@
 package com.eldenbuild.util
 
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.eldenbuild.R
 import com.eldenbuild.data.BuildCategories
+import com.eldenbuild.data.CharacterStatus
 import com.eldenbuild.data.ItemsDefaultCategories
 import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
 import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
+import com.eldenbuild.ui.customize_build_fragment.BuildStatusAdapter
 
 @BindingAdapter("imageUrl")
 fun bindingImage(imageView: ImageView, imgUrl: String?) {
@@ -28,10 +31,18 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<BuildCategories>?) {
     adapter.submitList(data)
 }
 
+@BindingAdapter("statusList")
+fun bindStatusLisToRecyclerView(recyclerView: RecyclerView, data: List<CharacterStatus>?) {
+    val adapter = recyclerView.adapter as BuildStatusAdapter
+    adapter.notifyItemChanged(BuildStatusAdapter.itemPosition)
+    adapter.submitList(data)
+}
+
 @BindingAdapter("itemList")
 fun bindItemListToRecyclerView(
     recyclerView: RecyclerView,
-    data: List<ItemsDefaultCategories>?) {
+    data: List<ItemsDefaultCategories>?
+) {
     val adapter = recyclerView.adapter as BuildItemsGridAdapter
     adapter.submitList(data)
 }
@@ -41,6 +52,10 @@ fun setImageInt(imageView: ImageView, image: Int) {
     imageView.setImageResource(image)
 }
 
+@BindingAdapter("intToString")
+fun bindIntToString(textView: TextView, intText: Int) {
+    textView.text = intText.toString()
+}
 
 
 

@@ -20,7 +20,6 @@ object Dialog {
     ): AlertDialog {
         val inputM = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val builder = MaterialAlertDialogBuilder(context)
-
         val bindingDialog: DialogInputTextBinding =
             DataBindingUtil.inflate(
                 inflater,
@@ -52,7 +51,6 @@ object Dialog {
         val dialog = builder.create()
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-
         bindingDialog.textName.doAfterTextChanged {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = !it.isNullOrBlank()
         }

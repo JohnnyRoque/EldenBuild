@@ -34,4 +34,7 @@
     <string name="incantations_text">Incantations</string>
     <string name="sorceries_text">Sorceries</string>
     <string name="spirits_text">Spirits</string>
+    <string name="edit_status_text">Edit Status</string>
+    <string name="add_one_level_text">Add one level to %1$s</string>
+    <string name="remove_one_level_text">Remove one level from %1$s</string>
 </resources>

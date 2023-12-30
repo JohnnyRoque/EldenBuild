@@ -36,7 +36,7 @@ class BuildsOverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        if (sharedViewModel.buildsList.value!!.isEmpty()){
+        if (sharedViewModel.buildsList.value!!.isEmpty()) {
             binding.detailNavHost.visibility = View.GONE
         }
 
