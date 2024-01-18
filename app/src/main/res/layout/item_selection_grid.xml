@@ -6,7 +6,7 @@
     <data>
         <variable
             name="itemImage"
-            type="com.eldenbuild.data.ItemsDefaultCategories" />
+            type="com.eldenbuild.data.database.ItemsDefaultCategories" />
     </data>
 
     <LinearLayout

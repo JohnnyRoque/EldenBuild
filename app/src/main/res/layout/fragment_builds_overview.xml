@@ -34,8 +34,8 @@
                 android:overScrollMode="never"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:buildList="@{viewModel.buildsList}"
                 android:orientation="vertical"
+                buildList="@{viewModel.buildsList}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/build_selection_vertical" />
 

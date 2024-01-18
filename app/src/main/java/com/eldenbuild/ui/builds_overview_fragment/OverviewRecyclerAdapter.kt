@@ -7,12 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.eldenbuild.R
-import com.eldenbuild.data.BuildCategories
+import com.eldenbuild.data.database.BuildCategories
 import com.eldenbuild.databinding.BuildSelectionVerticalBinding
 
 const val TAG = "ItemId"
 
-class OverviewRecyclerAdapter(private val context: Context, val buildDetail: (String) -> Unit) :
+class OverviewRecyclerAdapter(private val context: Context, val buildDetail: (Int) -> Unit) :
     ListAdapter<BuildCategories, OverviewRecyclerAdapter.BuildViewHolder>(object :
         DiffUtil.ItemCallback<BuildCategories>() {
 
@@ -52,7 +52,7 @@ class OverviewRecyclerAdapter(private val context: Context, val buildDetail: (St
         val item = getItem(position)
         holder.bind(item)
         holder.itemView.setOnClickListener {
-            buildDetail(item.buildId.toString())
+            buildDetail(item.buildId)
         }
         when (item.category) {
             context.getString(R.string.arcane_build) -> {

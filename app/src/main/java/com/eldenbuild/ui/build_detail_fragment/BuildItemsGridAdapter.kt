@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.eldenbuild.data.ItemsDefaultCategories
+import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.databinding.ItemSelectionGridBinding
 
 class BuildItemsGridAdapter(val openItemDetail: (String) -> Unit) :

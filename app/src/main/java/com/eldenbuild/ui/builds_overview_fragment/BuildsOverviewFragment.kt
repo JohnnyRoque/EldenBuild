@@ -11,14 +11,18 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.eldenbuild.R
 import com.eldenbuild.databinding.FragmentBuildsOverviewBinding
 import com.eldenbuild.ui.SlidingPaneOnBackPressedCallback
+import com.eldenbuild.util.AppViewModelProvider
 import com.eldenbuild.util.Dialog
 import com.eldenbuild.viewmodel.OverViewViewModel
 
 class BuildsOverviewFragment : Fragment() {
 
+
     private var _binding: FragmentBuildsOverviewBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: OverViewViewModel by activityViewModels()
+    private val sharedViewModel: OverViewViewModel by activityViewModels{
+        AppViewModelProvider.Factory
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,8 +39,16 @@ class BuildsOverviewFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val adapter = OverviewRecyclerAdapter(requireContext()){
+            sharedViewModel.showBuildDetail(it)
+            binding.detailNavHost.visibility = View.VISIBLE
+            if (!binding.slidingPaneLayout.isOpen) {
+                binding.slidingPaneLayout.openPane()
+            }
+        }
 
-        if (sharedViewModel.buildsList.value!!.isEmpty()) {
+
+        if (sharedViewModel.buildsList.value.isNullOrEmpty()) {
             binding.detailNavHost.visibility = View.GONE
         }
 
@@ -51,14 +63,8 @@ class BuildsOverviewFragment : Fragment() {
                 sharedViewModel.createNewBuild(name, type, description)
             }
         }
+        binding.buildRecyclerView.adapter = adapter
 
-        binding.buildRecyclerView.adapter = OverviewRecyclerAdapter(requireContext()) {
-            sharedViewModel.showBuildDetail(it)
-            binding.detailNavHost.visibility = View.VISIBLE
-            if (!binding.slidingPaneLayout.isOpen) {
-                binding.slidingPaneLayout.openPane()
-            }
-        }
         super.onViewCreated(view, savedInstanceState)
     }
 

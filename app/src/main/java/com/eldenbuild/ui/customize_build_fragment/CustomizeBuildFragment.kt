@@ -59,9 +59,12 @@ class CustomizeBuildFragment : Fragment() {
             )
         }
 
-        binding.statusRecyclerView.adapter = BuildStatusAdapter{ attName, isInc, ->
+        binding.statusRecyclerView.adapter = BuildStatusAdapter(
+            isEditAttributes = false
+        ) { attName, isInc ->
             sharedViewModel.setNewAttribute(attName, isInc)
         }
+
         when (argumentLabel) {
             "Equipment" -> {
                 binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu)
@@ -141,8 +144,16 @@ class CustomizeBuildFragment : Fragment() {
 
                 binding.statusRecyclerView.visibility = View.VISIBLE
                 binding.dividerStatus1.visibility = View.VISIBLE
+                binding.fabEdit.visibility = View.VISIBLE
                 binding.itemRecyclerView.visibility = View.GONE
                 binding.bottomNavigation.visibility = View.GONE
+
+                binding.fabEdit.setOnClickListener {
+                    CustomizeBuildModalBottomSheet().show(
+                        parentFragmentManager,
+                        "CustomizeBottomSheet"
+                    )
+                }
 
             }
         }

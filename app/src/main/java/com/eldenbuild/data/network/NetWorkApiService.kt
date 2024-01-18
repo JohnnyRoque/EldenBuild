@@ -1,4 +1,5 @@
 package com.eldenbuild.data.network
+
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -18,18 +19,37 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .build()
 
- interface EldenBuildApiService {
+interface EldenBuildApiService {
     @GET("weapons")
-       suspend fun getWeapon(@Query("limit") limit: Int,@Query("page") page:Int): WeaponResponse
-    @GET("armors")
-     suspend fun getArmors(): ArmorResponse
+    suspend fun getWeapon(@Query("limit") limit: Int, @Query("page") page: Int): WeaponResponse
 
-   @GET("weapons")
-    suspend fun queryItem(@Query("name") itemName:String) : WeaponResponse
+    @GET("armors")
+    suspend fun getArmors(): ArmorResponse
+
+    @GET("shields")
+    suspend fun getShields(): ShieldsResponse
+
+    @GET("ashes")
+    suspend fun getAshes(): AshesOfWarResponse
+
+    @GET("incantations")
+    suspend fun getIncantations(): IncantationsResponse
+
+    @GET("sorceries")
+    suspend fun getSorceries(): SorceriesResponse
+
+    @GET("spirits")
+    suspend fun getSpirits(): SpiritsResponse
+
+    @GET("talismans")
+    suspend fun getTalismans(): TalismansResponse
+
+    @GET("ammos")
+    suspend fun getAmmos(): AmmoResponse
 }
 
 object EldenBuildApi {
-    val retrofitService : EldenBuildApiService by lazy {
+    val retrofitService: EldenBuildApiService by lazy {
         retrofit.create(EldenBuildApiService::class.java)
     }
 }

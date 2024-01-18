@@ -7,9 +7,9 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.eldenbuild.R
-import com.eldenbuild.data.BuildCategories
-import com.eldenbuild.data.CharacterStatus
-import com.eldenbuild.data.ItemsDefaultCategories
+import com.eldenbuild.data.database.BuildCategories
+import com.eldenbuild.data.database.CharacterStatus
+import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
 import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
 import com.eldenbuild.ui.customize_build_fragment.BuildStatusAdapter

@@ -85,15 +85,16 @@
             tools:itemCount="8"
             tools:listitem="@layout/build_status_horizontal" />
 
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/fab_edit"-->
-<!--            style="@style/Widget.Material3.FloatingActionButton.Large.Primary"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="bottom|end"-->
-<!--            android:layout_margin="16dp"-->
-<!--            android:src="@drawable/edit_24px"-->
-<!--            android:contentDescription="@string/edit_status_text" />-->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_edit"
+            style="@style/Widget.Material3.FloatingActionButton.Large.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:visibility="invisible"
+            android:layout_margin="16dp"
+            android:src="@drawable/edit_24px"
+            android:contentDescription="@string/edit_status_text" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

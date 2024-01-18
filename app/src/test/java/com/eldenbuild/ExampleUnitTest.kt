@@ -1,7 +1,7 @@
 package com.eldenbuild
 
-import com.eldenbuild.data.CharacterStatus
-import com.eldenbuild.data.ItemsDefaultCategories
+import com.eldenbuild.data.database.CharacterStatus
+import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.data.network.EldenBuildApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -38,14 +38,14 @@ class ExampleUnitTest {
     @Test
     fun statsMap() {
         val newCharacterStatusList = listOf(
-            CharacterStatus("Vigor", 0,0),
-            CharacterStatus("Mind", 0,0),
-            CharacterStatus("Endurance", 0,0),
-            CharacterStatus("Strength", 0,0),
-            CharacterStatus("Dexterity", 0,0),
-            CharacterStatus("Intelligence", 0,0),
-            CharacterStatus("Faith", 0,0),
-            CharacterStatus("Arcane", 0,0),
+            CharacterStatus("Vigor", 0,),
+            CharacterStatus("Mind", 0,),
+            CharacterStatus("Endurance", 0,),
+            CharacterStatus("Strength", 0,),
+            CharacterStatus("Dexterity", 0,),
+            CharacterStatus("Intelligence", 0,),
+            CharacterStatus("Faith", 0,),
+            CharacterStatus("Arcane", 0,),
         )
     }
     fun setNewAttribute(attribute: Int,isInc:Boolean): Int {

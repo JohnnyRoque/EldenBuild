@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.eldenbuild.viewmodel.OverViewViewModel" />
+
+    </data>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                android:id="@+id/drag_handle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/edit_status_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="true"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:padding="6dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:statusList="@{viewModel.currentBuild.buildCharacterStatus}"
+                tools:itemCount="8"
+                tools:listitem="@layout/build_status_horizontal" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_confirm_attr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.Material3.Button.ElevatedButton"
+                android:minWidth="200dp"
+                android:text="@string/confirm_text"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                tools:text="Confirm"
+                />
+
+        </LinearLayout>
+</layout>

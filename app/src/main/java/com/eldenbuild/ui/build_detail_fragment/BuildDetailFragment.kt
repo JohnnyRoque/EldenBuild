@@ -51,7 +51,7 @@ class BuildDetailFragment : Fragment() {
                 binding.placeholderTextView.visibility = View.VISIBLE
             }
         }
-        binding.itemSelectionGridRecycler.adapter = BuildItemsGridAdapter() {
+        binding.itemSelectionGridRecycler.adapter = BuildItemsGridAdapter {
 
         }
         binding.itemSelectionCarousel.adapter = CarouselAdapter {

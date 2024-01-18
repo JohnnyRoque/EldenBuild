@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/itemDetailsFragment"
-        android:name="com.eldenbuild.ui.itemdetailfragment.ItemDetailsFragment"
+        android:name="com.eldenbuild.ui.item_detail_fragment.ItemDetailsFragment"
         android:label="ItemDetailsFragment" />
     <fragment
         android:id="@+id/buildDetailFragment"

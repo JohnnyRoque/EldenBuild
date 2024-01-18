@@ -37,4 +37,5 @@
     <string name="edit_status_text">Edit Status</string>
     <string name="add_one_level_text">Add one level to %1$s</string>
     <string name="remove_one_level_text">Remove one level from %1$s</string>
+    <string name="confirm_text">confirm</string>
 </resources>

@@ -1,15 +1,18 @@
 package com.eldenbuild.ui.customize_build_fragment
 
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.eldenbuild.data.CharacterStatus
+import com.eldenbuild.data.database.CharacterStatus
 import com.eldenbuild.databinding.BuildStatusHorizontalBinding
 
-class BuildStatusAdapter(val setNewLevel: (String, Boolean) -> Unit) :
+class BuildStatusAdapter(
+    val isEditAttributes: Boolean,
+    val setNewLevel: (String, Boolean) -> Unit
+) :
     ListAdapter<CharacterStatus, BuildStatusAdapter.BuildStatusViewHolder>(object :
         DiffUtil.ItemCallback<CharacterStatus>() {
         override fun areItemsTheSame(oldItem: CharacterStatus, newItem: CharacterStatus): Boolean {
@@ -21,13 +24,15 @@ class BuildStatusAdapter(val setNewLevel: (String, Boolean) -> Unit) :
             oldItem: CharacterStatus,
             newItem: CharacterStatus
         ): Boolean {
-            return oldItem.newAttributeLevel == newItem.newAttributeLevel
+            return oldItem.attributeLevel == newItem.attributeLevel
         }
     }) {
-        companion object{
-            private var _itemPosition =0
-            val itemPosition get() = _itemPosition
-        }
+    companion object {
+        private var _itemPosition = 0
+        val itemPosition get() = _itemPosition
+
+    }
+
     class BuildStatusViewHolder(val binding: BuildStatusHorizontalBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val iconAdd = binding.iconAdd
@@ -51,21 +56,20 @@ class BuildStatusAdapter(val setNewLevel: (String, Boolean) -> Unit) :
     override fun onBindViewHolder(holder: BuildStatusViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-
         holder.iconAdd.setOnClickListener {
             _itemPosition = holder.adapterPosition
             setNewLevel(item.attributeName, true)
-            Log.d(
-                "Items", " Position = $position"
-            )
         }
 
         holder.iconMinus.setOnClickListener {
             _itemPosition = holder.adapterPosition
             setNewLevel(item.attributeName, false)
-            Log.d(
-                "Items", " Layout Position = $position"
-            )
+        }
+        if (isEditAttributes) {
+            holder.apply {
+                iconAdd.visibility = View.VISIBLE
+                iconMinus.visibility = View.VISIBLE
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.eldenbuild.ui.itemdetailfragment
+package com.eldenbuild.ui.item_detail_fragment
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.eldenbuild.R
-import com.eldenbuild.data.StatsAmount
+import com.eldenbuild.data.database.StatsAmount
 import com.eldenbuild.databinding.StatsViewDesignBinding
 
 class StatsAmountAdapter(private val context: Context) :

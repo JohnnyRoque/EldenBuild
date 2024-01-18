@@ -1,4 +1,4 @@
-package com.eldenbuild.ui.itemdetailfragment
+package com.eldenbuild.ui.item_detail_fragment
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.eldenbuild.data.StatsScaling
+import com.eldenbuild.data.database.StatsScaling
 import com.eldenbuild.databinding.StatsViewDesignBinding
 import androidx.recyclerview.widget.ListAdapter
 import com.eldenbuild.R

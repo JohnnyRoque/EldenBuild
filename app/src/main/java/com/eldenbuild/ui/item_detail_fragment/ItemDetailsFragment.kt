@@ -1,4 +1,4 @@
-package com.eldenbuild.ui.itemdetailfragment
+package com.eldenbuild.ui.item_detail_fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.eldenbuild.R
-import com.eldenbuild.data.ItemArmors
-import com.eldenbuild.data.ItemWeapons
+import com.eldenbuild.data.database.ItemArmors
+import com.eldenbuild.data.database.ItemWeapons
 import com.eldenbuild.databinding.FragmentItemDetailsBinding
 import com.eldenbuild.util.TypesOfStats
 import com.eldenbuild.viewmodel.OverViewViewModel

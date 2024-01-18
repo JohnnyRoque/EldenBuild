@@ -6,11 +6,11 @@
     <data>
         <variable
             name="itemTextAmount"
-            type="com.eldenbuild.data.StatsAmount" />
+            type="com.eldenbuild.data.database.StatsAmount" />
 
         <variable
             name="itemTextStats"
-            type="com.eldenbuild.data.StatsScaling" />
+            type="com.eldenbuild.data.database.StatsScaling" />
 
     </data>
 

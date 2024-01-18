@@ -8,7 +8,7 @@
 
         <variable
             name="overViewBuild"
-            type="com.eldenbuild.data.BuildCategories" />
+            type="com.eldenbuild.data.database.BuildCategories" />
 
     </data>
 
