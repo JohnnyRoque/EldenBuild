@@ -7,11 +7,9 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.eldenbuild.R
-import com.eldenbuild.data.database.BuildCategories
 import com.eldenbuild.data.database.CharacterStatus
 import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
-import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
 import com.eldenbuild.ui.customize_build_fragment.BuildStatusAdapter
 
 @BindingAdapter("imageUrl")
@@ -25,11 +23,6 @@ fun bindingImage(imageView: ImageView, imgUrl: String?) {
     }
 }
 
-@BindingAdapter("buildList")
-fun bindRecyclerView(recyclerView: RecyclerView, data: List<BuildCategories>?) {
-    val adapter = recyclerView.adapter as OverviewRecyclerAdapter
-    adapter.submitList(data)
-}
 
 @BindingAdapter("statusList")
 fun bindStatusLisToRecyclerView(recyclerView: RecyclerView, data: List<CharacterStatus>?) {

@@ -35,7 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                buildList="@{viewModel.buildsList}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/build_selection_vertical" />
 
@@ -55,6 +54,7 @@
                 android:id="@+id/detail_nav_host"
                 android:layout_width="300dp"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:name="com.eldenbuild.ui.build_detail_fragment.BuildDetailFragment"
                 android:layout_height="match_parent"/>
         </androidx.slidingpanelayout.widget.SlidingPaneLayout>

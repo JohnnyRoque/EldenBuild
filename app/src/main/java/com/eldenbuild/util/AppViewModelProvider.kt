@@ -5,12 +5,20 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.eldenbuild.application.EldenBuildApplication
+import com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel
 import com.eldenbuild.viewmodel.OverViewViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            OverViewViewModel(eldenBuildApplication().container.offlineBuildRepository)
+            OverViewViewModel(
+                eldenBuildApplication().container.offlineBuildRepository,
+            )
+        }
+        initializer {
+            BuildDetailViewModel(
+                eldenBuildApplication().container.offlineBuildRepository
+            )
         }
     }
 }

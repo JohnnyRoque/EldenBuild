@@ -19,4 +19,3 @@ data class CharacterStatus(
     var attributeLevel: Int,
 )
 
-data class ListOfImagesCarousel(val image: Int, val text: String)

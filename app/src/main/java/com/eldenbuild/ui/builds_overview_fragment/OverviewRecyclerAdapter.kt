@@ -28,6 +28,7 @@ class OverviewRecyclerAdapter(private val context: Context, val buildDetail: (In
         }
 
     }) {
+
     class BuildViewHolder(val binding: BuildSelectionVerticalBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val buildImage = binding.buildImage

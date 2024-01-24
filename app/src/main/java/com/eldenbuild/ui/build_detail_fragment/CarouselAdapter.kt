@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.eldenbuild.R
-import com.eldenbuild.data.database.ListOfImagesCarousel
 import com.eldenbuild.databinding.ItemSelectionCarouselBinding
 
 class CarouselAdapter(val navToCustomizeBuild: (String) -> Unit) : RecyclerView.Adapter<CarouselAdapter.CarouselViewHolder>() {
@@ -45,5 +44,5 @@ class CarouselAdapter(val navToCustomizeBuild: (String) -> Unit) : RecyclerView.
         }
     }
 }
-
+data class ListOfImagesCarousel(val image: Int, val text: String)
 

@@ -25,7 +25,6 @@ abstract class AppDatabase : RoomDatabase() {
                 )
                     .build().also { INSTANCE = it }
             }
-
         }
     }
 }

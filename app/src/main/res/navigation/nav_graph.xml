@@ -16,6 +16,10 @@
         <action
             android:id="@+id/action_buildsOverviewFragment_to_customizeBuildFragment"
             app:destination="@id/customizeBuildFragment" />
+        <argument
+            android:name="id"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/itemDetailsFragment"

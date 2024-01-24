@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.eldenbuild.data.database.BuildCategories
@@ -15,41 +14,51 @@ import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.data.network.EldenBuildApi
 import com.eldenbuild.data.repository.BuildRepository
 import com.eldenbuild.ui.builds_overview_fragment.TAG
-import com.eldenbuild.util.Items
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
 const val NETWORK_TEST = "network_test"
 
-class OverViewViewModel(private val buildRepository: BuildRepository) : ViewModel() {
-
+class OverViewViewModel(
+    private val buildRepository: BuildRepository,
+) : ViewModel() {
     //OverViewViewModel
-    val buildsList: LiveData<List<BuildCategories>> =
-        buildRepository.getAllBuildStream().asLiveData()
+    val buildsList: StateFlow<List<BuildCategories>> =
+        buildRepository.getAllBuildStream()
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                initialValue = mutableListOf()
+            )
+    fun getCurrentBuild(buildId: Int) = buildRepository.getBuildStream(buildId)
 
-    //BuildDetailFragment
+
+    //BuildDetailFragment  -X-
     private val _currentBuild = MutableLiveData<BuildCategories>()
     val currentBuild: LiveData<BuildCategories> = _currentBuild
 
-    //ItemDetailFragment
+    //ItemDetailFragment -X-
     private val _itemDetail = MutableLiveData<ItemsDefaultCategories>()
     val itemDetail: LiveData<ItemsDefaultCategories> = _itemDetail
 
-    //CustomizeBuildFragment
+    //CustomizeBuildFragment -X-
     private val _showItemList = MutableLiveData<List<ItemsDefaultCategories>>()
     val showItemList: LiveData<List<ItemsDefaultCategories>> = _showItemList.map { list ->
         list.sortedBy { it.category }
     }
-
+//-X-
     private val _listOfWeapons: MutableLiveData<List<ItemWeapons>> = MutableLiveData()
     private val listOfWeapons: LiveData<List<ItemWeapons>> = _listOfWeapons
-
+//-X-
     private val _listOfArmors: MutableLiveData<List<ItemArmors>> = MutableLiveData()
     private val listOfArmors: LiveData<List<ItemArmors>> = _listOfArmors
 
-    //CustomizeBuildFragment
+    //CustomizeBuildFragment -X-
 
     fun setNewAttribute(attributeName: String, isInc: Boolean) {
         val currentBuildStatus = _currentBuild.value!!
@@ -72,7 +81,7 @@ class OverViewViewModel(private val buildRepository: BuildRepository) : ViewMode
         }
         _currentBuild.postValue(currentBuildStatus)
     }
-    //CustomizeBuildFragment
+    //CustomizeBuildFragment -X-
 
     fun showItemDetail(itemId: String) {
         _showItemList.value?.let {
@@ -114,20 +123,11 @@ class OverViewViewModel(private val buildRepository: BuildRepository) : ViewMode
             } catch (e: Exception) {
                 Log.d("TAG", "$e")
             }
-
         }
     }
 //OverViewViewModel
 
-     fun showBuildDetail(buildId: Int): LiveData<BuildCategories> =
-        buildRepository.getBuildStream(buildId).asLiveData()
-
-
-    //OverViewViewModel
-
-    fun getBuildList(): Flow<List<BuildCategories>> = buildRepository.getAllBuildStream()
-
-    //ItemDetailFragment
+    //ItemDetailFragment -X-
     fun addItemToBuild(item: ItemsDefaultCategories): String {
         var message: String
         try {
@@ -140,7 +140,7 @@ class OverViewViewModel(private val buildRepository: BuildRepository) : ViewMode
         }
         return message
     }
-
+//-X-
     private fun getItems() {
         viewModelScope.launch {
             val time = measureTimeMillis {
@@ -162,12 +162,8 @@ class OverViewViewModel(private val buildRepository: BuildRepository) : ViewMode
         }
     }
 
-    fun setItem(typeOfItem: String) {
-        when (typeOfItem) {
-            Items.ARMOR -> _showItemList.value = listOfArmors.value
-            Items.WEAPON -> _showItemList.value = listOfWeapons.value
-        }
-    }
+    //-X-
+
 
     init {
         getItems()
@@ -175,5 +171,23 @@ class OverViewViewModel(private val buildRepository: BuildRepository) : ViewMode
 }
 
 
+object CurrentBuild {
+  private  val _buildDetail: MutableStateFlow<BuildCategories?> = MutableStateFlow(null)
+    val buildDetail: MutableStateFlow<BuildCategories?> = _buildDetail
+    private val emptyBuild = BuildCategories(
+        title = "",
+        category = "",
+        description = "",
+        buildItems = mutableListOf(),
+        buildCharacterStatus = mutableListOf()
+    )
 
-
+    fun getBuildDetail(buildCategories: BuildCategories): BuildCategories{
+        return try {
+            _buildDetail.value = buildCategories
+            buildCategories
+        }catch (e:Exception){
+            emptyBuild
+        }
+    }
+}

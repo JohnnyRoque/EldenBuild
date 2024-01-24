@@ -8,6 +8,6 @@ class EldenBuildApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-        _container =AppDataContainer(this)
+        _container = AppDataContainer(this)
     }
 }
