@@ -26,9 +26,10 @@
     <string name="accept_text">accept</string>
     <string name="cancel_text">Cancel</string>
     <string name="placeholder_text">Brave Tarnished.\nIt seems your build it\'s empty.</string>
-    <string name="weapons_text">Weapons</string>
-    <string name="armors_text">Armors</string>
+    <string name="weapons_text">weapons</string>
+    <string name="armors_text">armors</string>
     <string name="talismans_text">Talismans</string>
+    <string name="shield_text">Shield</string>
     <string name="ammo_text">Ammo</string>
     <string name="add_to_build_text">Add to Build</string>
     <string name="incantations_text">Incantations</string>

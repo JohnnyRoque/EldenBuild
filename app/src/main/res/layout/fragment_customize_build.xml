@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.eldenbuild.viewmodel.OverViewViewModel" />
+            type="com.eldenbuild.ui.customize_build_fragment.CustomizeBuildViewModel" />
 
         <variable
             name="label"
@@ -38,17 +38,25 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_recycler_view"
+            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="70dp"
             android:clipToPadding="true"
             android:overScrollMode="never"
             android:padding="8dp"
-            app:itemList="@{viewModel.showItemList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_dodgeInsetEdges="top"
             app:spanCount="5"
             tools:listitem="@layout/item_selection_grid" />
+
+        <ImageView
+            android:id="@+id/loading_items_animation"
+            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/loading_animation" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
@@ -57,6 +65,7 @@
             android:layout_gravity="bottom"
             app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             app:layout_insetEdge="bottom"
+            app:menu="@menu/bottom_navigation_menu"
             tools:menu="@menu/bottom_navigation_menu" />
 
 
@@ -72,7 +81,6 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/status_recycler_view"
-            app:statusList="@{viewModel.currentBuild.buildCharacterStatus}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="true"

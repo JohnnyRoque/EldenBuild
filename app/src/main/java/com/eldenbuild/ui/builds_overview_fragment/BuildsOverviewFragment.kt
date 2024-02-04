@@ -16,9 +16,9 @@ import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.eldenbuild.R
 import com.eldenbuild.databinding.FragmentBuildsOverviewBinding
 import com.eldenbuild.ui.SlidingPaneOnBackPressedCallback
+import com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel.CurrentBuild
 import com.eldenbuild.util.AppViewModelProvider
 import com.eldenbuild.util.Dialog
-import com.eldenbuild.viewmodel.CurrentBuild
 import com.eldenbuild.viewmodel.OverViewViewModel
 import kotlinx.coroutines.launch
 

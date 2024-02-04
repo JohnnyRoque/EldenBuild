@@ -8,17 +8,21 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.eldenbuild.R
-import com.eldenbuild.data.database.ItemArmors
-import com.eldenbuild.data.database.ItemWeapons
 import com.eldenbuild.databinding.FragmentItemDetailsBinding
+import com.eldenbuild.util.AppViewModelProvider
 import com.eldenbuild.util.TypesOfStats
-import com.eldenbuild.viewmodel.OverViewViewModel
+import kotlinx.coroutines.launch
 
 class ItemDetailsFragment : Fragment() {
     private var _binding: FragmentItemDetailsBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewMode: OverViewViewModel by activityViewModels()
+    private val sharedViewMode: ItemDetailViewModel by activityViewModels {
+        AppViewModelProvider.Factory
+    }
 
 
     override fun onCreateView(
@@ -36,16 +40,6 @@ class ItemDetailsFragment : Fragment() {
         val scalingAdapter = StatsScalingAdapter(requireContext())
         val amountAdapter3 = StatsAmountAdapter(requireContext())
 
-        binding.addToBuildButton.setOnClickListener {
-            sharedViewMode.itemDetail.value?.let {
-                Toast.makeText(
-                    requireContext(),
-                    sharedViewMode.addItemToBuild(it),
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
-            }
-        }
 
         binding.apply {
             viewModel = sharedViewMode
@@ -54,14 +48,25 @@ class ItemDetailsFragment : Fragment() {
             recyclerAmount3.adapter = scalingAdapter
             recyclerAmount4.adapter = amountAdapter3
         }
-        sharedViewMode.itemDetail.observe(viewLifecycleOwner) {
-            when (it) {
-                is ItemWeapons -> {
-                    val weapon = it
-                    amountAdapter.submitList(weapon.attack)
-                    amountAdapter2.submitList(weapon.defence)
-                    scalingAdapter.submitList(weapon.scalesWith)
-                    amountAdapter3.submitList(weapon.requiredAttributes)
+
+
+        lifecycleScope.launch {
+            sharedViewMode.itemDetail.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { itemDetail ->
+                    binding.addToBuildButton.setOnClickListener {
+                        Toast.makeText(
+                            requireContext(),
+                            sharedViewMode.addItemToBuild(itemDetail),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+
+
+                    amountAdapter.submitList(itemDetail.attack)
+                    amountAdapter2.submitList(itemDetail.defence)
+                    scalingAdapter.submitList(itemDetail.scalesWith)
+                    amountAdapter3.submitList(itemDetail.requiredAttributes)
                     binding.divider4.visibility = View.VISIBLE
                     binding.divider5.visibility = View.VISIBLE
                     binding.statsText.setText(TypesOfStats.attackPower)
@@ -69,17 +74,6 @@ class ItemDetailsFragment : Fragment() {
                     binding.statsText3.setText(TypesOfStats.attributesScaling)
                     binding.statsText4.setText(TypesOfStats.attributesRequired)
                 }
-
-                else -> {
-                    val armor = it as ItemArmors
-                    amountAdapter.submitList(armor.dmgNegation)
-                    amountAdapter2.submitList(armor.resistance)
-                    binding.divider5.visibility = View.GONE
-                    binding.divider4.visibility = View.GONE
-                    binding.statsText.setText(TypesOfStats.damageNegation)
-                    binding.statsText2.setText(TypesOfStats.resistance)
-                }
-            }
         }
 
         super.onViewCreated(view, savedInstanceState)

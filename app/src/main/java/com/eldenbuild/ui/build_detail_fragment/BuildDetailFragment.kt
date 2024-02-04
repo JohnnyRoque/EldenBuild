@@ -15,7 +15,6 @@ import com.eldenbuild.R
 import com.eldenbuild.databinding.FragmentBuildDetailBinding
 import com.eldenbuild.ui.builds_overview_fragment.BuildsOverviewFragmentDirections
 import com.eldenbuild.util.AppViewModelProvider
-import com.eldenbuild.viewmodel.CurrentBuild
 import com.google.android.material.carousel.CarouselSnapHelper
 import kotlinx.coroutines.launch
 
@@ -50,7 +49,7 @@ class BuildDetailFragment : Fragment() {
         }
         lifecycleScope.launch {
 
-            CurrentBuild.buildDetail.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+            BuildDetailViewModel.buildDetail.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect { build ->
                     // bind the currentBuild data to the views
                     binding.currentBuild = build
