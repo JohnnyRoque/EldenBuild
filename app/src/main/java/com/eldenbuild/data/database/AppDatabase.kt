@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.eldenbuild.util.json_adapter.ListConverter
 
-@Database(entities = [BuildCategories::class], version = 1, exportSchema = false)
+@Database(entities = [BuildCategories::class], version = 2, exportSchema = false)
 @TypeConverters(ListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun buildsDao(): BuildsDao
@@ -23,6 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database"
                 )
+                    .fallbackToDestructiveMigration()
                     .build().also { INSTANCE = it }
             }
         }

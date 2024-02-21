@@ -20,11 +20,23 @@
             android:name="id"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_buildsOverviewFragment_to_itemDetailsFragment"
+            app:destination="@id/itemDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemDetailsFragment"
         android:name="com.eldenbuild.ui.item_detail_fragment.ItemDetailsFragment"
-        android:label="ItemDetailsFragment" />
+        android:label="ItemDetailsFragment" >
+        <argument
+            android:name="isItemFromBuild"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="type"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/buildDetailFragment"
         android:name="com.eldenbuild.ui.build_detail_fragment.BuildDetailFragment"
@@ -39,5 +51,9 @@
         <argument
             android:name="customizeLabel"
             app:argType="string" />
+        <argument
+            android:name="isFromBuildDetail"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 </navigation>

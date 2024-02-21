@@ -14,10 +14,12 @@ class ItemOnlineRepository(private val eldenBuildApiService: EldenBuildApiServic
     override fun getStreamOfItems(group: String, limit: Int, page: Int): Flow<ItemResponse> = flow {
 
         while (currentCoroutineContext().isActive) {
+
             try {
                 emit(eldenBuildApiService.getItems(group, limit, page))
+
             } catch (e: Exception) {
-                Log.d("ItemResponse", "false")
+                Log.d("ItemResponse", "Empty response")
             }
         }
     }

@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
 import com.eldenbuild.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
@@ -45,7 +46,15 @@ class SlidingPaneOnBackPressedCallback(
     override fun onPanelClosed(panel: View) {
         isEnabled = false
     }
-
 }
 
+class BottomNavigationPressedCallback(
+    private val  bottomNavigationView: BottomNavigationView,
+    private val navigateUp : Boolean,
+    private val item1Id : Int
+):OnBackPressedCallback(bottomNavigationView.isEnabled && bottomNavigationView.selectedItemId != item1Id ) {
+    override fun handleOnBackPressed() {
+        bottomNavigationView.selectedItemId = item1Id
+    }
+}
 

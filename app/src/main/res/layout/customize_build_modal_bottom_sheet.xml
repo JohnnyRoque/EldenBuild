@@ -5,9 +5,10 @@
 
     <data>
 
+
         <variable
-            name="viewModel"
-            type="com.eldenbuild.viewmodel.OverViewViewModel" />
+            name="currentBuild"
+            type="com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel.CurrentBuild" />
 
     </data>
 
@@ -27,10 +28,10 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="true"
                 android:orientation="vertical"
+                statusList="@{currentBuild.buildDetail.buildCharacterStatus}"
                 android:overScrollMode="never"
                 android:padding="6dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:statusList="@{viewModel.currentBuild.buildCharacterStatus}"
                 tools:itemCount="8"
                 tools:listitem="@layout/build_status_horizontal" />
 

@@ -38,6 +38,7 @@ class BuildStatusAdapter(
         val iconAdd = binding.iconAdd
         val iconMinus = binding.iconMinus
         fun bind(characterStatus: CharacterStatus) {
+
             binding.apply {
                 attribute = characterStatus
                 executePendingBindings()
@@ -52,7 +53,6 @@ class BuildStatusAdapter(
             )
         )
     }
-
     override fun onBindViewHolder(holder: BuildStatusViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
@@ -65,6 +65,7 @@ class BuildStatusAdapter(
             _itemPosition = holder.adapterPosition
             setNewLevel(item.attributeName, false)
         }
+
         if (isEditAttributes) {
             holder.apply {
                 iconAdd.visibility = View.VISIBLE

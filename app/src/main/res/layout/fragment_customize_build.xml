@@ -13,6 +13,11 @@
             name="label"
             type="String" />
 
+
+        <variable
+            name="currentBuild"
+            type="com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel.CurrentBuild" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -38,13 +43,14 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_recycler_view"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="70dp"
             android:clipToPadding="true"
             android:overScrollMode="never"
             android:padding="8dp"
+            itemList="@{viewModel.currentList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_dodgeInsetEdges="top"
             app:spanCount="5"
@@ -65,7 +71,6 @@
             android:layout_gravity="bottom"
             app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             app:layout_insetEdge="bottom"
-            app:menu="@menu/bottom_navigation_menu"
             tools:menu="@menu/bottom_navigation_menu" />
 
 
@@ -87,7 +92,7 @@
             android:orientation="vertical"
             android:overScrollMode="never"
             android:padding="6dp"
-            android:visibility="invisible"
+            statusList="@{currentBuild.buildDetail.buildCharacterStatus}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_dodgeInsetEdges="top|start"
             tools:itemCount="8"

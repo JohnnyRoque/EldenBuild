@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.slidingpanelayout.widget.SlidingPaneLayout
@@ -36,12 +35,19 @@ class BuildsOverviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_builds_overview, container, false)
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.fragment_builds_overview,
+                container,
+                false
+            )
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
-            SlidingPaneOnBackPressedCallback(binding.slidingPaneLayout)
+            onBackPressedCallback = SlidingPaneOnBackPressedCallback(binding.slidingPaneLayout)
         )
+
+
         return binding.root
     }
 
@@ -52,35 +58,36 @@ class BuildsOverviewFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }
 
-        val adapter = OverviewRecyclerAdapter(requireContext()) { id ->
-            if (!binding.slidingPaneLayout.isOpen) {
-                binding.slidingPaneLayout.openPane()
-            }
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val adapter = OverviewRecyclerAdapter(requireContext()) { id ->
+                    if (!binding.slidingPaneLayout.isOpen) {
+                        binding.slidingPaneLayout.openPane()
+                    }
                     // Returns the build id on click
                     launch {
                         sharedViewModel.getCurrentBuild(id).collect { build ->
                             CurrentBuild.getBuildDetail(build)
                             Log.d(TAG, "${CurrentBuild.buildDetail.value}")
+                            CurrentBuild.resetCheckedItemList()
+
                         }
                     }
                 }
+
+                binding.buildRecyclerView.adapter = adapter
+                launch {
+                    sharedViewModel.buildsList
+                        .collect {
+                            //Submit new list of Builds
+                            adapter.submitList(it)
+                            if (it.isNotEmpty()) {
+                                binding.detailNavHost.visibility = View.VISIBLE
+                            }
+                        }
+                }
             }
         }
-
-        //Submit new list of Builds
-        lifecycleScope.launch {
-            sharedViewModel.buildsList.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    adapter.submitList(it)
-                    if (it.isNotEmpty()) {
-                        binding.detailNavHost.visibility = View.VISIBLE
-                    }
-                }
-        }
-
-        binding.buildRecyclerView.adapter = adapter
 
         binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
         binding.addBuildFab.setOnClickListener {
@@ -89,7 +96,6 @@ class BuildsOverviewFragment : Fragment() {
 
             }
         }
-
         super.onViewCreated(view, savedInstanceState)
     }
 

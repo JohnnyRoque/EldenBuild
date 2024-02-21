@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import com.eldenbuild.R
 import com.eldenbuild.databinding.CustomizeBuildModalBottomSheetBinding
+import com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel
 import com.eldenbuild.viewmodel.OverViewViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -31,8 +32,8 @@ class CustomizeBuildModalBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.apply {
-            viewModel = sharedViewModel
             lifecycleOwner =viewLifecycleOwner
+            currentBuild = BuildDetailViewModel.CurrentBuild
         }
         binding.editStatusRecyclerView.adapter = BuildStatusAdapter(true){attName, isInc, ->
             sharedViewModel.setNewAttribute(attName, isInc)

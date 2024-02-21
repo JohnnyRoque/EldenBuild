@@ -1,6 +1,7 @@
 package com.eldenbuild.util
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -24,7 +25,8 @@ object AppViewModelProvider {
         }
         initializer {
             CustomizeBuildViewModel(
-                eldenBuildApplication().container.onlineItemRepository
+                eldenBuildApplication().container.onlineItemRepository,
+                this.createSavedStateHandle()
             )
         }
         initializer {

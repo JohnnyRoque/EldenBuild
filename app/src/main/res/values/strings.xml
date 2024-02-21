@@ -3,6 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="weight_text">Weight: %1$s</string>
     <string name="stats_text">%1$s: %2$s</string>
+    <string name="effect_text">Effect : %1$s</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="attack_power">Attack Power</string>
     <string name="guarded_damage">Guarded Damage Negation</string>

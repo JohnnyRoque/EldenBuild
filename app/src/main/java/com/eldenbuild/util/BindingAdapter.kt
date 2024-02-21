@@ -17,7 +17,6 @@ fun bindingImage(imageView: ImageView, imgUrl: String?) {
     imgUrl?.let {
         val imageUri = imgUrl.toUri().buildUpon().scheme("https").build()
         imageView.load(imageUri) {
-            (R.drawable.loading_animation)
             error(R.drawable.ic_broken_image)
         }
     }

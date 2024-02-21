@@ -36,6 +36,8 @@ class OverViewViewModel(
     private val _currentBuild = MutableLiveData<BuildCategories>()
     val currentBuild: LiveData<BuildCategories> = _currentBuild
 
+    //CustomizeBuildFragment -X-
+
     fun setNewAttribute(attributeName: String, isInc: Boolean) {
         val currentBuildStatus = _currentBuild.value!!
         currentBuildStatus.let {
@@ -57,11 +59,7 @@ class OverViewViewModel(
         }
         _currentBuild.postValue(currentBuildStatus)
     }
-    //CustomizeBuildFragment -X-
-
-
     //BuildsOverviewFragment.kt
-
     fun createNewBuild(title: String, category: String, description: String?) {
         val newItemList = mutableListOf<ItemsDefaultCategories>()
         val newCharacterStatusList = mutableListOf(
@@ -87,36 +85,10 @@ class OverViewViewModel(
                     )
                 )
             } catch (e: Exception) {
-                Log.d("TAG", "$e")
+                Log.d("CreateNewBuild Exception", "$e")
             }
         }
     }
-//OverViewViewModel
-
-    //ItemDetailFragment -X-
-
-//-X-
-//    private fun getItems() {
-//        viewModelScope.launch {
-//            val time = measureTimeMillis {
-//                try {
-//                    _listOfWeapons.value =
-//                        EldenBuildApi.retrofitService.getWeapon(20, page = 3).data
-//
-//                } catch (e: Exception) {
-//                    Log.d(NETWORK_TEST, "Failure Weapon  : ${e.message}")
-//                }
-//                try {
-//                    _listOfArmors.value = EldenBuildApi.retrofitService.getArmors().data
-//
-//                } catch (e: Exception) {
-//                    Log.d(NETWORK_TEST, "Failure Armor  : ${e.message}")
-//                }
-//            }
-//            Log.d("Teste", "Time = $time")
-//        }
-//    }
-
 }
 
 

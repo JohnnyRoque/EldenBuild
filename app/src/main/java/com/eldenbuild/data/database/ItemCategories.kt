@@ -20,7 +20,7 @@ data class ItemsDefaultCategories(
 
     val slots: Int = 0,
 
-    val effects: String = "",
+    val effect: String = "",
 
     val requires: String = "",
 
@@ -43,14 +43,15 @@ data class ItemsDefaultCategories(
     val fpCost: Int = 0,
 
     val hpCost: Int = 0,
+
     val passive: String = "",
 
-    val attackPower: List<StatsAmount> = listOf()
+    val attackPower: List<StatsAmount> = listOf(),
+
+    var itemType : String = "",
+
+    var fromBuild : String = ""
 )
-
-class ItemArmors()
-
-class ItemWeapons()
 
 data class StatsAmount(val name: String, var amount: Int?)
 data class StatsScaling(val name: String, val scaling: String = "")
