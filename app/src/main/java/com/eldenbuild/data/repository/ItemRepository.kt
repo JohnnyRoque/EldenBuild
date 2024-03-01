@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ItemRepository {
     fun getStreamOfItems(group: String, limit:Int, page: Int): Flow<ItemResponse>
+
 }

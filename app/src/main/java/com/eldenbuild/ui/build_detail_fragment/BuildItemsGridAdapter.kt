@@ -85,7 +85,7 @@ class BuildItemsGridAdapter(
 
                 else -> {
                     openItemDetail(item, item.itemType)
-                    Log.d("ItemFrom", "Item is from = ${item}")
+                    Log.d("ItemFrom", "Item is from = ${item.fromBuild}")
                 }
             }
         }

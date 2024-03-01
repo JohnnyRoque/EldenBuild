@@ -1,17 +1,80 @@
 package com.eldenbuild
 
+import android.content.ClipData.Item
+import com.eldenbuild.data.database.ItemsDefaultCategories
+import com.eldenbuild.data.network.ItemResponse
+import com.eldenbuild.data.repository.ItemOnlineRepository
+import com.eldenbuild.util.Items
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 
 /**
  * Example local unit test, which will execute on the development machine (host).
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@RunWith(JUnit4::class)
+@RunWith(MockitoJUnitRunner::class)
 class ExampleUnitTest {
+    @Mock
+    val fakeItemRepository: ItemOnlineRepository = Mockito.mock(ItemOnlineRepository::class.java)
+
+    @Test
+    fun streamOfItemsTest() = runTest {
+
+        val fakeList = mutableListOf<ItemsDefaultCategories>()
+        val emptyItem = ItemsDefaultCategories()
+
+        repeat(50) {
+            fakeList.add(emptyItem)
+        }
+        val itemResponse = ItemResponse(
+            true,
+            fakeList.size,
+            100,
+            fakeList
+        )
+
+
+        fun getItemList(group: String): Flow<List<ItemsDefaultCategories>> {
+            val limit = 50
+            var page = 0
+            Mockito.`when`(fakeItemRepository.getStreamOfItems(group, limit, page)).thenReturn(
+                flow {
+                    emit(itemResponse)
+                }
+            )
+            return fakeItemRepository.getStreamOfItems(group, limit, page)
+                .filterNotNull()
+                .map { itemResponse ->
+                    itemResponse.data.also { list ->
+                        list.sortedBy { it.category }
+                        list.map {
+                            when (group) {
+                                Items.WEAPON -> it.itemType = Items.WEAPON
+                                Items.ARMOR -> it.itemType = Items.ARMOR
+                                Items.SHIELD -> it.itemType = Items.SHIELD
+                                Items.TALISMANS -> it.itemType = Items.TALISMANS
+                            }
+                        }
+                    }
+                }
+        }
+
+        val list = getItemList(Items.WEAPON).last()
+        assertEquals(Items.WEAPON, list.first().itemType)
+
+    }
+
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
@@ -36,7 +99,7 @@ class ExampleUnitTest {
 
     @Test
     fun statsMap() {
-        data class Item (
+        data class Item(
             val title: String,
         )
 
@@ -51,7 +114,7 @@ class ExampleUnitTest {
                 }
             }
             when {
-                sameItemCount > 1-> {
+                sameItemCount > 1 -> {
 
                     var newItem = item.copy(
                         title = item.title + "($sameItemCount)"

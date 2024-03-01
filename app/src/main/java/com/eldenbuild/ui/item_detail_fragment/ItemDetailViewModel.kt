@@ -18,6 +18,36 @@ class ItemDetailViewModel(
     private val offlineBuildRepository: BuildRepository
 ) : ViewModel() {
 
+    private fun addNewItem(
+        item: ItemsDefaultCategories,
+        list: List<ItemsDefaultCategories>
+    ): ItemsDefaultCategories {
+        var sameItemCount = 1
+
+        for (i in list) {
+            if (i.name.substringBefore("(") == item.name && list.contains(item)) {
+                sameItemCount++
+            }
+        }
+        return when {
+            sameItemCount > 1 -> {
+
+                var newItem = item.copy(
+                    name = item.name + "($sameItemCount)"
+                )
+                if (list.contains(newItem)) {
+                    newItem = item.copy(
+                        name = item.name + "(${sameItemCount.dec()})"
+                    )
+                }
+                newItem
+            }
+
+            else -> {
+                item
+            }
+        }
+    }
 
 
     val itemDetail: StateFlow<ItemsDefaultCategories> = _itemDetail
@@ -29,7 +59,7 @@ class ItemDetailViewModel(
 
             val newUpdatedBuild = checkNotNull(buildDetail.value).copy()
 
-            newUpdatedBuild.buildItems.add(item)
+            newUpdatedBuild.buildItems.add(addNewItem(item, newUpdatedBuild.buildItems))
 
             newUpdatedBuild.buildItems.map {
                 it.fromBuild = newUpdatedBuild.title

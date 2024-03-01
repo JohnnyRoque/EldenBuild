@@ -17,7 +17,6 @@ interface AppContainer {
     val onlineItemRepository: ItemRepository
 
 }
-
 class AppDataContainer(private val context: Context) : AppContainer {
 
     override val offlineBuildRepository: BuildRepository by lazy {

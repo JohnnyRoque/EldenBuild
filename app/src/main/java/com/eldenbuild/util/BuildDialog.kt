@@ -57,20 +57,23 @@ object Dialog {
         return dialog
     }
 
-    fun buildDialog(
+    fun buildDialog (
         context: Context,
-        message: Int,
+        message: String,
         title: Int,
-        positiveAction: () -> Unit
+        positiveAction: () -> Unit,
+        positiveActionText:String,
 
     ): AlertDialog {
         val builder = MaterialAlertDialogBuilder(context)
         builder.apply {
             setTitle(title)
             setMessage(message)
-            show()
-            setPositiveButton(R.string.accept_text) { dialog, _ ->
+            setPositiveButton(positiveActionText) { dialog, _ ->
                 positiveAction()
+                dialog.dismiss()
+            }
+            setNegativeButton(R.string.cancel_text){ dialog, _ ->
                 dialog.dismiss()
             }
         }
