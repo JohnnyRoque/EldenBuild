@@ -1,19 +1,37 @@
 package com.eldenbuild
 
-import android.content.ClipData.Item
+import android.content.Context
+import androidx.lifecycle.SavedStateHandle
+import com.eldenbuild.application.appModule
 import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.data.network.ItemResponse
 import com.eldenbuild.data.repository.ItemOnlineRepository
+import com.eldenbuild.data.repository.ItemRepository
 import com.eldenbuild.util.Items
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.android.ext.koin.androidContext
+import org.koin.dsl.module
+import org.koin.test.KoinTest
+import org.koin.test.KoinTestRule
+import org.koin.test.check.checkModules
+import org.koin.test.inject
+import org.koin.test.mock.MockProviderRule
+import org.koin.test.mock.declareMock
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
@@ -23,14 +41,91 @@ import org.mockito.junit.MockitoJUnitRunner
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@RunWith(MockitoJUnitRunner::class)
-class ExampleUnitTest {
+class DiTest : KoinTest {
+    @get:Rule
+    val mockProvider = MockProviderRule.create { clazz ->
+        Mockito.mock(clazz.java)
+    }
+
+
     @Mock
-    val fakeItemRepository: ItemOnlineRepository = Mockito.mock(ItemOnlineRepository::class.java)
+    val context: Context = Mockito.mock(Context::class.java)
+
+    @get:Rule
+    val koinTestRule = KoinTestRule.create {
+        androidContext(context)
+        printLogger()
+        declareMock<SavedStateHandle> {
+            this["IS_FROM_BUILD_DETAIL"] = true
+        }
+        checkModules {
+            modules(appModule)
+        }
+
+    }
+
+    @Test
+    fun checkDi() {
+    }
+}
+
+@RunWith(MockitoJUnitRunner::class)
+class TestCheckedItems : KoinTest {
+    @get:Rule
+    val mockProvider = MockProviderRule.create { clazz ->
+        Mockito.mock(clazz)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun testCheckItemsListFlow() = runTest {
+        val _stateTest: MutableStateFlow<MutableList<String>> =
+            MutableStateFlow(mutableListOf())
+        val stateTest: StateFlow<MutableList<String>> = _stateTest
+
+        fun addString(s: String) {
+            if (!_stateTest.value.contains(s)) {
+                _stateTest.value.add(s)
+            }
+        }
+
+        fun removeString(string: String) {
+            if (_stateTest.value.contains(string)) {
+                _stateTest.value.remove(string)
+            }
+        }
+
+        addString("g")
+        addString("c")
+        addString("t")
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            addString("2")
+            stateTest.collect() {}
+
+        }
+        addString("k")
+        Assert.assertTrue(stateTest.value.contains("k") && stateTest.value.contains("2"))
+
+    }
+}
+
+@RunWith(MockitoJUnitRunner::class)
+class ExampleUnitTest : KoinTest {
+
+    private val testRepositoryModule = module {
+        single<ItemRepository> {
+            Mockito.mock(ItemOnlineRepository::class.java)
+        }
+    }
+
+    @get:Rule
+    val koinTestRule = KoinTestRule.create {
+        modules(testRepositoryModule)
+    }
+    private val fakeItemRepository: ItemRepository by inject()
 
     @Test
     fun streamOfItemsTest() = runTest {
-
         val fakeList = mutableListOf<ItemsDefaultCategories>()
         val emptyItem = ItemsDefaultCategories()
 
@@ -43,7 +138,6 @@ class ExampleUnitTest {
             100,
             fakeList
         )
-
 
         fun getItemList(group: String): Flow<List<ItemsDefaultCategories>> {
             val limit = 50
@@ -71,7 +165,7 @@ class ExampleUnitTest {
         }
 
         val list = getItemList(Items.WEAPON).last()
-        assertEquals(Items.WEAPON, list.first().itemType)
+        assertEquals(50, list.size)
 
     }
 

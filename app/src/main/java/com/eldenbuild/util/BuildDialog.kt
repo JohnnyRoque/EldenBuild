@@ -76,6 +76,7 @@ object Dialog {
             setNegativeButton(R.string.cancel_text){ dialog, _ ->
                 dialog.dismiss()
             }
+                .show()
         }
         return builder.create()
     }

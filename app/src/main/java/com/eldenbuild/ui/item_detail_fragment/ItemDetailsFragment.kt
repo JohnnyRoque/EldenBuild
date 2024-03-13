@@ -7,16 +7,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.eldenbuild.R
 import com.eldenbuild.databinding.FragmentItemDetailsBinding
-import com.eldenbuild.util.AppViewModelProvider
 import com.eldenbuild.util.Items
 import com.eldenbuild.util.TypesOfStats
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val ITEM_FROM_BUILD = "isItemFromBuild"
 const val TYPE = "type"
@@ -25,9 +24,7 @@ class ItemDetailsFragment : Fragment() {
     private var _binding: FragmentItemDetailsBinding? = null
     private var isItemFromBuild = false
     private val binding get() = _binding!!
-    private val sharedViewMode: ItemDetailViewModel by activityViewModels {
-        AppViewModelProvider.Factory
-    }
+    private val sharedViewMode: ItemDetailViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         arguments?.let {

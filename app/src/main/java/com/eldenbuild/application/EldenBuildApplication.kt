@@ -1,15 +1,17 @@
 package com.eldenbuild.application
 
 import android.app.Application
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class EldenBuildApplication: Application() {
-
-   private lateinit var _container : AppDataContainer
-    val container get() = _container
-
     override fun onCreate() {
         super.onCreate()
-        _container = AppDataContainer(this)
-
+        startKoin{
+            androidLogger()
+            androidContext(this@EldenBuildApplication)
+            modules(appModule)
+        }
     }
 }

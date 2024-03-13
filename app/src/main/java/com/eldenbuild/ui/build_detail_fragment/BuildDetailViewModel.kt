@@ -8,17 +8,31 @@ import com.eldenbuild.data.repository.BuildRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class BuildDetailViewModel(private val buildRepository: BuildRepository) : ViewModel() {
 
-    val checkedItemsUiState: StateFlow<MutableList<ItemsDefaultCategories>> = _checkedItemUiState
+
+    private val _checkedItemUiState: MutableStateFlow<List<ItemsDefaultCategories>> =
+        MutableStateFlow(
+            mutableListOf()
+        )
+
+    val checkedItemUiState: StateFlow<List<ItemsDefaultCategories>> =
+        _checkedItemUiState
+
+    private fun resetCheckedItemList() {
+        _checkedItemUiState.update {
+            mutableListOf()
+        }
+    }
+
     fun deleteCheckedItems(checkedItems: List<ItemsDefaultCategories>): String {
         val message: String = try {
             val updatedBuild = checkNotNull(buildDetail.value).copy()
             if (updatedBuild.buildItems.containsAll(checkedItems)) {
                 updatedBuild.buildItems.removeAll(checkedItems)
-
                 viewModelScope.launch(Dispatchers.IO) {
                     buildRepository.updateBuild(updatedBuild)
                 }
@@ -33,31 +47,28 @@ class BuildDetailViewModel(private val buildRepository: BuildRepository) : ViewM
     }
 
     fun addCheckedItem(item: ItemsDefaultCategories) {
-        if (!_checkedItemUiState.value.contains(item)) {
-            _checkedItemUiState.value.add(item)
+        if (!checkedItemUiState.value.contains(item)) {
+            _checkedItemUiState.update { value ->
+                mutableListOf<ItemsDefaultCategories>().also {
+                    it.addAll(value)
+                    it.add(item)
+                }
+            }
         }
     }
 
     fun removeCheckedItem(item: ItemsDefaultCategories) {
         if (_checkedItemUiState.value.contains(item)) {
-            _checkedItemUiState.value.remove(item)
+            _checkedItemUiState.update { value ->
+                mutableListOf<ItemsDefaultCategories>().also {
+                    it.addAll(value)
+                    it.remove(item)
+                }
+            }
         }
     }
 
     companion object CurrentBuild {
-
-        private val _checkedItemUiState: MutableStateFlow<MutableList<ItemsDefaultCategories>> =
-            MutableStateFlow(
-                mutableListOf()
-            )
-
-        fun resetCheckedItemList() {
-            _checkedItemUiState.value.removeAll {
-                it.javaClass == ItemsDefaultCategories::class.java
-
-            }
-        }
-
 
         private val _buildDetail: MutableStateFlow<BuildCategories?> = MutableStateFlow(null)
         val buildDetail: StateFlow<BuildCategories?> = _buildDetail

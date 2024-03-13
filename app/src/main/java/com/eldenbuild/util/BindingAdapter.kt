@@ -1,5 +1,6 @@
 package com.eldenbuild.util
 
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
@@ -35,8 +36,14 @@ fun bindItemListToRecyclerView(
     recyclerView: RecyclerView,
     data: List<ItemsDefaultCategories>?
 ) {
-    val adapter = recyclerView.adapter as BuildItemsGridAdapter
-    adapter.submitList(data)
+    try {
+        val adapter = recyclerView.adapter as BuildItemsGridAdapter
+        adapter.submitList(data)
+        adapter.notifyDataSetChanged()
+
+    } catch (e: NullPointerException) {
+        Log.d("NullAdapter", "$e")
+    }
 }
 
 @BindingAdapter("imageInt")
@@ -48,6 +55,7 @@ fun setImageInt(imageView: ImageView, image: Int) {
 fun bindIntToString(textView: TextView, intText: Int) {
     textView.text = intText.toString()
 }
+
 
 
 

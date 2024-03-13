@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 // setItem vai informar qual dessas listas sera atribuido ao valor de curretnList
 class CustomizeBuildViewModel(
     private val itemOnlineRepository: ItemRepository,
-    val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
 
@@ -50,9 +50,9 @@ class CustomizeBuildViewModel(
             listOf()
         )
 
-    val uiState: StateFlow<Boolean> = checkNotNull(
+    val uiState: StateFlow<Boolean> = (
         savedStateHandle.getStateFlow (
-            IS_FROM_BUILD_DETAIL, true
+            IS_FROM_BUILD_DETAIL, false
         )
     )
 

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -16,19 +15,18 @@ import com.eldenbuild.R
 import com.eldenbuild.databinding.FragmentBuildsOverviewBinding
 import com.eldenbuild.ui.SlidingPaneOnBackPressedCallback
 import com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel.CurrentBuild
-import com.eldenbuild.util.AppViewModelProvider
 import com.eldenbuild.util.Dialog
 import com.eldenbuild.viewmodel.OverViewViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val BUILD_ID = "buildId"
 
 class BuildsOverviewFragment : Fragment() {
     private var _binding: FragmentBuildsOverviewBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel: OverViewViewModel by activityViewModels {
-        AppViewModelProvider.Factory
-    }
+    private val sharedViewModel: OverViewViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,16 +58,16 @@ class BuildsOverviewFragment : Fragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+
                 val adapter = OverviewRecyclerAdapter(requireContext()) { id ->
                     if (!binding.slidingPaneLayout.isOpen) {
                         binding.slidingPaneLayout.openPane()
                     }
                     // Returns the build id on click
-                    launch {
+                    launch(Dispatchers.IO) {
                         sharedViewModel.getCurrentBuild(id).collect { build ->
                             CurrentBuild.getBuildDetail(build)
                             Log.d(TAG, "${CurrentBuild.buildDetail.value}")
-                            CurrentBuild.resetCheckedItemList()
 
                         }
                     }

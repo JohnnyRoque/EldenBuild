@@ -12,7 +12,6 @@ import androidx.activity.findViewTreeOnBackPressedDispatcherOwner
 import androidx.activity.setViewTreeOnBackPressedDispatcherOwner
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -23,9 +22,9 @@ import com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel
 import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
 import com.eldenbuild.ui.builds_overview_fragment.TAG
 import com.eldenbuild.ui.item_detail_fragment.ItemDetailViewModel
-import com.eldenbuild.util.AppViewModelProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val CUSTOMIZE_LABEL = "customizeLabel"
 const val IS_FROM_BUILD_DETAIL = "isFromBuildDetail"
@@ -35,9 +34,7 @@ class CustomizeBuildFragment : Fragment() {
     private var argumentLabel: String? = null
     private var _binding: FragmentCustomizeBuildBinding? = null
     val binding get() = _binding!!
-    private val sharedViewModel: CustomizeBuildViewModel by activityViewModels {
-        AppViewModelProvider.Factory
-    }
+    private val sharedViewModel: CustomizeBuildViewModel by viewModel<CustomizeBuildViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -183,6 +180,7 @@ class CustomizeBuildFragment : Fragment() {
                                 R.id.page_1 -> {
 
                                     launch(Dispatchers.IO) {
+
                                         sharedViewModel.listOfWeapons.collect { list ->
                                             sharedViewModel.showList(list)
                                         }
@@ -214,7 +212,9 @@ class CustomizeBuildFragment : Fragment() {
                                 }
 
                                 R.id.page_4 -> {
+
                                     launch(Dispatchers.IO) {
+
                                         sharedViewModel.listOfTalismans.collect {
                                             sharedViewModel.showList(it)
                                         }

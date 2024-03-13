@@ -78,6 +78,10 @@ dependencies {
     //Coil
     implementation("io.coil-kt:coil:2.5.0")
 
+    //Koin
+    implementation("io.insert-koin:koin-android:3.5.3")
+    testImplementation("io.insert-koin:koin-test-junit4:3.6.0-alpha3")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.10.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
