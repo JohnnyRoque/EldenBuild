@@ -35,9 +35,9 @@ class CustomizeBuildModalBottomSheet : BottomSheetDialogFragment() {
             lifecycleOwner =viewLifecycleOwner
             currentBuild = BuildDetailViewModel.CurrentBuild
         }
-        binding.editStatusRecyclerView.adapter = BuildStatusAdapter(true){attName, isInc, ->
-            sharedViewModel.setNewAttribute(attName, isInc)
-        }
+//        binding.editStatusRecyclerView.adapter = BuildStatusAdapter(true){attName, isInc, ->
+//            sharedViewModel.setNewAttribute(attName, isInc)
+//        }
 
         binding.buttonConfirmAttr.setOnClickListener {
             dismiss()

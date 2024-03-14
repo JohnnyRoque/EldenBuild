@@ -63,7 +63,7 @@ class BuildItemsGridAdapter(
         holder.bind(item)
         val card = holder.card
 
-        if (checkedItemList.isEmpty()) {
+        if (checkedItemList.isNotEmpty()) {
             for (i in (0..checkedItemList.lastIndex)) {
                 card.isChecked = checkedItemList.contains(item)
             }

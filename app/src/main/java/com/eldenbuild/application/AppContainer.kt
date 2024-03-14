@@ -48,7 +48,8 @@ val appModule = module {
         Room.databaseBuilder(
             get(),
             AppDatabase::class.java,
-            "app_database")
+            "app_database"
+        )
             .build()
     }
 
@@ -65,7 +66,7 @@ val appModule = module {
         CustomizeBuildViewModel(get(), savedStateHandle = get())
     }
     viewModel {
-        ItemDetailViewModel(get(),get())
+        ItemDetailViewModel(get(), get())
     }
 
 }

@@ -14,9 +14,15 @@
 
     <com.google.android.material.card.MaterialCardView
         style="@style/Widget.Material3.CardView.Outlined"
+        android:id="@+id/build_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:checkable="true"
+        app:checkedIcon="@drawable/check_circle_24px"
+        app:checkedIconGravity="TOP_START"
+        app:checkedIconMargin="0dp"
+        android:checked="false"
         app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout

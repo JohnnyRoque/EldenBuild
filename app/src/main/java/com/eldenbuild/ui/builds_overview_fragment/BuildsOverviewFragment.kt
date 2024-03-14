@@ -18,6 +18,7 @@ import com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel.CurrentBuild
 import com.eldenbuild.util.Dialog
 import com.eldenbuild.viewmodel.OverViewViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -58,27 +59,52 @@ class BuildsOverviewFragment : Fragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    sharedViewModel.checkedBuildListUiState.filterNotNull().collect { list ->
+                        if (binding.buildRecyclerView.adapter == null) {
 
-                val adapter = OverviewRecyclerAdapter(requireContext()) { id ->
-                    if (!binding.slidingPaneLayout.isOpen) {
-                        binding.slidingPaneLayout.openPane()
-                    }
-                    // Returns the build id on click
-                    launch(Dispatchers.IO) {
-                        sharedViewModel.getCurrentBuild(id).collect { build ->
-                            CurrentBuild.getBuildDetail(build)
-                            Log.d(TAG, "${CurrentBuild.buildDetail.value}")
+                            binding.buildRecyclerView.adapter = OverviewRecyclerAdapter(
+                                requireContext(),
+                                checkedBuilds = { card, build, addItem ->
+                                    if (addItem) {
+                                        sharedViewModel.addCheckedBuild(build)
+                                        card.isChecked = true
+                                    } else {
+                                        sharedViewModel.removeCheckedBuild(build)
+                                        card.isChecked = false
+                                    }
+
+
+                                },
+                                buildDetail = { id ->
+                                    if (!binding.slidingPaneLayout.isOpen) {
+                                        binding.slidingPaneLayout.openPane()
+                                    }
+                                    launch(Dispatchers.IO) {
+                                        sharedViewModel.getCurrentBuild(id).collect { build ->
+                                            if (CurrentBuild.buildDetail.value?.title == build.title) {
+                                                CurrentBuild.resetCheckedItemList()
+                                            }
+                                            CurrentBuild.getBuildDetail(build)
+                                            Log.d(TAG, "${CurrentBuild.buildDetail.value}")
+
+                                        }
+                                    }
+                                }
+                            )
+                        } else {
+                            val buildAdapter =
+                                binding.buildRecyclerView.adapter as OverviewRecyclerAdapter
+                            buildAdapter.checkedBuildList = list
 
                         }
                     }
                 }
 
-                binding.buildRecyclerView.adapter = adapter
                 launch {
                     sharedViewModel.buildsList
                         .collect {
                             //Submit new list of Builds
-                            adapter.submitList(it)
                             if (it.isNotEmpty()) {
                                 binding.detailNavHost.visibility = View.VISIBLE
                             }

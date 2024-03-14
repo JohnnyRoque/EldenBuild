@@ -8,9 +8,11 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.eldenbuild.R
+import com.eldenbuild.data.database.BuildCategories
 import com.eldenbuild.data.database.CharacterStatus
 import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
+import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
 import com.eldenbuild.ui.customize_build_fragment.BuildStatusAdapter
 
 @BindingAdapter("imageUrl")
@@ -39,8 +41,6 @@ fun bindItemListToRecyclerView(
     try {
         val adapter = recyclerView.adapter as BuildItemsGridAdapter
         adapter.submitList(data)
-        adapter.notifyDataSetChanged()
-
     } catch (e: NullPointerException) {
         Log.d("NullAdapter", "$e")
     }
@@ -54,6 +54,20 @@ fun setImageInt(imageView: ImageView, image: Int) {
 @BindingAdapter("intToString")
 fun bindIntToString(textView: TextView, intText: Int) {
     textView.text = intText.toString()
+}
+
+@BindingAdapter("buildList")
+fun bindBuildListToRecyclerView(
+    recyclerView: RecyclerView,
+    data: List<BuildCategories>?
+) {
+    try {
+        val adapter = recyclerView.adapter as OverviewRecyclerAdapter
+        adapter.submitList(data)
+    } catch (e: NullPointerException) {
+        Log.d("NullAdapter", "$e")
+    }
+
 }
 
 

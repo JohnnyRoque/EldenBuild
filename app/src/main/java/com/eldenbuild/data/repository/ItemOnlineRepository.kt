@@ -10,7 +10,6 @@ import kotlinx.coroutines.isActive
 
 class ItemOnlineRepository(private val eldenBuildApiService: EldenBuildApiService) :
     ItemRepository {
-
     override fun getStreamOfItems(group: String, limit: Int, page: Int): Flow<ItemResponse> = flow {
 
         while (currentCoroutineContext().isActive) {

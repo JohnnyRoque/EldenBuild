@@ -13,20 +13,8 @@ import kotlinx.coroutines.launch
 
 class BuildDetailViewModel(private val buildRepository: BuildRepository) : ViewModel() {
 
-
-    private val _checkedItemUiState: MutableStateFlow<List<ItemsDefaultCategories>> =
-        MutableStateFlow(
-            mutableListOf()
-        )
-
     val checkedItemUiState: StateFlow<List<ItemsDefaultCategories>> =
         _checkedItemUiState
-
-    private fun resetCheckedItemList() {
-        _checkedItemUiState.update {
-            mutableListOf()
-        }
-    }
 
     fun deleteCheckedItems(checkedItems: List<ItemsDefaultCategories>): String {
         val message: String = try {
@@ -70,6 +58,17 @@ class BuildDetailViewModel(private val buildRepository: BuildRepository) : ViewM
 
     companion object CurrentBuild {
 
+        private val _checkedItemUiState: MutableStateFlow<List<ItemsDefaultCategories>> =
+            MutableStateFlow(
+                listOf()
+            )
+        fun resetCheckedItemList() {
+            _checkedItemUiState.update {
+                mutableListOf()
+            }
+        }
+
+
         private val _buildDetail: MutableStateFlow<BuildCategories?> = MutableStateFlow(null)
         val buildDetail: StateFlow<BuildCategories?> = _buildDetail
 
@@ -83,7 +82,7 @@ class BuildDetailViewModel(private val buildRepository: BuildRepository) : ViewM
 
 
         fun getBuildDetail(buildCategories: BuildCategories) = try {
-            _buildDetail.value = buildCategories
+            _buildDetail.update { buildCategories }
         } catch (e: Exception) {
             emptyBuild
         }

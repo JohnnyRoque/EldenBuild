@@ -61,40 +61,45 @@ class BuildDetailFragment : Fragment() {
 
                 launch {
                     sharedViewModel.checkedItemUiState.collect { list ->
-                            if (binding.itemSelectionGridRecycler.adapter == null) {
-                                binding.itemSelectionGridRecycler.adapter = BuildItemsGridAdapter(
-                                    isItemSelectable = true,
-                                    checkedItems = { card, item, addItem ->
+                        if (binding.itemSelectionGridRecycler.adapter == null) {
+                            binding.itemSelectionGridRecycler.adapter = BuildItemsGridAdapter(
+                                isItemSelectable = true,
+                                checkedItemList = list,
+                                checkedItems = { card, item, addItem ->
 
-                                        if (addItem) {
-                                            sharedViewModel.addCheckedItem(item)
-                                            card.isChecked = true
+                                    if (addItem) {
+                                        sharedViewModel.addCheckedItem(item)
+                                        card.isChecked = true
 
-                                        } else {
-                                            sharedViewModel.removeCheckedItem(item)
-                                            card.isChecked = false
+                                    } else {
+                                        sharedViewModel.removeCheckedItem(item)
+                                        card.isChecked = false
 
-                                        }
+                                    }
 
-                                    }, openItemDetail = { item, itemType ->
+                                }, openItemDetail = { item, itemType ->
 
-                                        ItemDetailViewModel.getCurrentItem(item)
-                                        findNavController().navigate(
-                                            BuildsOverviewFragmentDirections
-                                                .actionBuildsOverviewFragmentToItemDetailsFragment(
-                                                    type = itemType,
-                                                    true
-                                                )
-                                        )
-                                        Log.d("itemType", "type = $itemType")
+                                    ItemDetailViewModel.getCurrentItem(item)
+                                    findNavController().navigate(
+                                        BuildsOverviewFragmentDirections
+                                            .actionBuildsOverviewFragmentToItemDetailsFragment(
+                                                type = itemType,
+                                                true
+                                            )
+                                    )
+                                    Log.d("itemType", "type = $itemType")
 
-                                    })
-                            } else {
-                                 val adapter = binding.itemSelectionGridRecycler.adapter as BuildItemsGridAdapter
-                                adapter.checkedItemList = list
-
-
+                                })
+                        } else {
+                            val adapter =
+                                binding.itemSelectionGridRecycler.adapter as BuildItemsGridAdapter
+                            adapter.notifyDataSetChanged()
+                            adapter.checkedItemList = list
+                            if (adapter.itemCount == 0){
+                                binding.placeholderImage.visibility = View.VISIBLE
+                                binding.placeholderTextView.visibility = View.VISIBLE
                             }
+                        }
 
 
                         binding.buildTopAppBar?.let { topBar ->
@@ -103,7 +108,7 @@ class BuildDetailFragment : Fragment() {
                             topBar.setOnMenuItemClickListener { menuItem ->
                                 when (menuItem.itemId) {
                                     R.id.delete -> {
-                                        Dialog.buildDialog(
+                                        Dialog.buildDialog (
                                             context = requireContext(),
                                             message = getString(
                                                 R.string.delete_items_dialog_message,
@@ -127,23 +132,18 @@ class BuildDetailFragment : Fragment() {
                                 }
                             }
                         }
-                        Log.d("checkedItemList","Count = ${list.size}")
+                        Log.d("checkedItemList", "Count = ${list.size}")
                     }
                 }
 
-
-
-
                 launch {
-                    BuildDetailViewModel.buildDetail
-                        .filterNotNull()
-                        .collect { build ->
+                    BuildDetailViewModel.buildDetail.filterNotNull().collect { build ->
 
-                            // bind the currentBuild data to the views
-                            binding.currentBuild = build
-                            Log.d("buildSize", "${build.buildItems.size}")
-                            // check if the buildItems list is empty or not
+                        // bind the currentBuild data to the views
+                        binding.currentBuild = build
+                        Log.d("buildSize", "${build.buildItems.size}")
 
+                        // check if the buildItems list is empty or not
                             if (build.buildItems.isNotEmpty()) {
                                 binding.itemSelectionGridRecycler.visibility = View.VISIBLE
                                 binding.placeholderImage.visibility = View.GONE
@@ -153,7 +153,8 @@ class BuildDetailFragment : Fragment() {
                                 binding.placeholderImage.visibility = View.VISIBLE
                                 binding.placeholderTextView.visibility = View.VISIBLE
                             }
-                        }
+
+                    }
 
                 }
             }

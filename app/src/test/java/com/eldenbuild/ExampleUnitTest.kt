@@ -3,6 +3,7 @@ package com.eldenbuild
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.eldenbuild.application.appModule
+import com.eldenbuild.data.database.BuildCategories
 import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.data.network.ItemResponse
 import com.eldenbuild.data.repository.ItemOnlineRepository
@@ -21,6 +22,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,7 +49,6 @@ class DiTest : KoinTest {
         Mockito.mock(clazz.java)
     }
 
-
     @Mock
     val context: Context = Mockito.mock(Context::class.java)
 
@@ -71,6 +72,9 @@ class DiTest : KoinTest {
 
 @RunWith(MockitoJUnitRunner::class)
 class TestCheckedItems : KoinTest {
+    @Mock
+    val buildCategories: BuildCategories = Mockito.mock(BuildCategories::class.java)
+
     @get:Rule
     val mockProvider = MockProviderRule.create { clazz ->
         Mockito.mock(clazz)
@@ -107,72 +111,80 @@ class TestCheckedItems : KoinTest {
         Assert.assertTrue(stateTest.value.contains("k") && stateTest.value.contains("2"))
 
     }
-}
 
-@RunWith(MockitoJUnitRunner::class)
-class ExampleUnitTest : KoinTest {
-
-    private val testRepositoryModule = module {
-        single<ItemRepository> {
-            Mockito.mock(ItemOnlineRepository::class.java)
-        }
-    }
-
-    @get:Rule
-    val koinTestRule = KoinTestRule.create {
-        modules(testRepositoryModule)
-    }
-    private val fakeItemRepository: ItemRepository by inject()
-
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun streamOfItemsTest() = runTest {
-        val fakeList = mutableListOf<ItemsDefaultCategories>()
-        val emptyItem = ItemsDefaultCategories()
+    fun deleteItemsFromBuild() {
+        val list1 = mutableListOf<String>("John","Jane","Max","Sarah","Cloe","John","Saint","Carl","Connor")
+        val checkedItems = mutableListOf("Sarah","Cloe","Connor","Saint","Carl","John")
+            list1.removeAll  (checkedItems)
+        assertTrue(list1 != checkedItems)
+    }
 
-        repeat(50) {
-            fakeList.add(emptyItem)
+    @RunWith(MockitoJUnitRunner::class)
+    class ExampleUnitTest : KoinTest {
+
+        private val testRepositoryModule = module {
+            single<ItemRepository> {
+                Mockito.mock(ItemOnlineRepository::class.java)
+            }
         }
-        val itemResponse = ItemResponse(
-            true,
-            fakeList.size,
-            100,
-            fakeList
-        )
 
-        fun getItemList(group: String): Flow<List<ItemsDefaultCategories>> {
-            val limit = 50
-            var page = 0
-            Mockito.`when`(fakeItemRepository.getStreamOfItems(group, limit, page)).thenReturn(
-                flow {
-                    emit(itemResponse)
-                }
+        @get:Rule
+        val koinTestRule = KoinTestRule.create {
+            modules(testRepositoryModule)
+        }
+        private val fakeItemRepository: ItemRepository by inject()
+
+        @Test
+        fun streamOfItemsTest() = runTest {
+            val fakeList = mutableListOf<ItemsDefaultCategories>()
+            val emptyItem = ItemsDefaultCategories()
+
+            repeat(50) {
+                fakeList.add(emptyItem)
+            }
+            val itemResponse = ItemResponse(
+                true,
+                fakeList.size,
+                100,
+                fakeList
             )
-            return fakeItemRepository.getStreamOfItems(group, limit, page)
-                .filterNotNull()
-                .map { itemResponse ->
-                    itemResponse.data.also { list ->
-                        list.sortedBy { it.category }
-                        list.map {
-                            when (group) {
-                                Items.WEAPON -> it.itemType = Items.WEAPON
-                                Items.ARMOR -> it.itemType = Items.ARMOR
-                                Items.SHIELD -> it.itemType = Items.SHIELD
-                                Items.TALISMANS -> it.itemType = Items.TALISMANS
+
+            fun getItemList(group: String): Flow<List<ItemsDefaultCategories>> {
+                val limit = 50
+                var page = 0
+                Mockito.`when`(fakeItemRepository.getStreamOfItems(group, limit, page)).thenReturn(
+                    flow {
+                        emit(itemResponse)
+                    }
+                )
+                return fakeItemRepository.getStreamOfItems(group, limit, page)
+                    .filterNotNull()
+                    .map { itemResponse ->
+                        itemResponse.data.also { list ->
+                            list.sortedBy { it.category }
+                            list.map {
+                                when (group) {
+                                    Items.WEAPON -> it.itemType = Items.WEAPON
+                                    Items.ARMOR -> it.itemType = Items.ARMOR
+                                    Items.SHIELD -> it.itemType = Items.SHIELD
+                                    Items.TALISMANS -> it.itemType = Items.TALISMANS
+                                }
                             }
                         }
                     }
-                }
+            }
+
+            val list = getItemList(Items.WEAPON).last()
+            assertEquals(50, list.size)
+
         }
 
-        val list = getItemList(Items.WEAPON).last()
-        assertEquals(50, list.size)
-
-    }
-
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
+        @Test
+        fun addition_isCorrect() {
+            assertEquals(4, 2 + 2)
+        }
 
 //    @Test
 //    fun sortList() {
@@ -191,73 +203,75 @@ class ExampleUnitTest : KoinTest {
 //
 
 
-    @Test
-    fun statsMap() {
-        data class Item(
-            val title: String,
-        )
+        @Test
+        fun statsMap() {
+            data class Item(
+                val title: String,
+            )
 
-        val list = mutableListOf(Item("Hookclaws"))
+            val list = mutableListOf(Item("Hookclaws"))
 
-        fun addNewItem(item: Item) {
-            var sameItemCount = 1
+            fun addNewItem(item: Item) {
+                var sameItemCount = 1
 
-            for (i in list) {
-                if (i.title.substringBefore("(") == item.title && list.contains(item)) {
-                    sameItemCount++
-                }
-            }
-            when {
-                sameItemCount > 1 -> {
-
-                    var newItem = item.copy(
-                        title = item.title + "($sameItemCount)"
-                    )
-                    if (list.contains(newItem)) {
-                        newItem = item.copy(
-                            title = item.title + "(${sameItemCount.dec()})"
-                        )
+                for (i in list) {
+                    if (i.title.substringBefore("(") == item.title && list.contains(item)) {
+                        sameItemCount++
                     }
-                    list.add(newItem)
                 }
+                when {
+                    sameItemCount > 1 -> {
 
-                else -> {
-                    list.add(item)
+                        var newItem = item.copy(
+                            title = item.title + "($sameItemCount)"
+                        )
+                        if (list.contains(newItem)) {
+                            newItem = item.copy(
+                                title = item.title + "(${sameItemCount.dec()})"
+                            )
+                        }
+                        list.add(newItem)
+                    }
+
+                    else -> {
+                        list.add(item)
+                    }
                 }
             }
+
+            addNewItem(Item("Hookclaws"))
+            addNewItem(Item("Hookclaws"))
+            list.removeAt(1)
+            addNewItem(Item("Sword"))
+            addNewItem(Item("Sword"))
+            addNewItem(Item("Hookclaws"))
+            addNewItem(Item("Sword"))
+            list.removeAt(0)
+            addNewItem(Item("Hookclaws"))
+
+
+            addNewItem(Item("Hookclaws"))
+
+
+            assertEquals(
+                listOf(Item("Hookclaws"), Item("Hookclaws(2)"), Item("Hookclaws(3)")),
+                list
+            )
+
         }
-
-        addNewItem(Item("Hookclaws"))
-        addNewItem(Item("Hookclaws"))
-        list.removeAt(1)
-        addNewItem(Item("Sword"))
-        addNewItem(Item("Sword"))
-        addNewItem(Item("Hookclaws"))
-        addNewItem(Item("Sword"))
-        list.removeAt(0)
-        addNewItem(Item("Hookclaws"))
+    }
 
 
-        addNewItem(Item("Hookclaws"))
-
-
-        assertEquals(
-            listOf(Item("Hookclaws"), Item("Hookclaws(2)"), Item("Hookclaws(3)")),
-            list
-        )
-
+    fun setNewAttribute(attribute: Int, isInc: Boolean): Int {
+        val add: (Int) -> Int = { it + 1 }
+        val sub: (Int) -> Int = { it - 1 }
+        return when {
+            !isInc && attribute > 0 -> sub(attribute)
+            else -> add(attribute)
+        }
     }
 }
 
-
-fun setNewAttribute(attribute: Int, isInc: Boolean): Int {
-    val add: (Int) -> Int = { it + 1 }
-    val sub: (Int) -> Int = { it - 1 }
-    return when {
-        !isInc && attribute > 0 -> sub(attribute)
-        else -> add(attribute)
-    }
-}
 
 
 
