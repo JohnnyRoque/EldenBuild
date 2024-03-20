@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+//For i in buildList{ if (buildList.contains(checkList)){deleteBuild) resetCheckList
+
 const val NETWORK_TEST = "network_test"
 
 class OverViewViewModel(
@@ -23,6 +25,7 @@ class OverViewViewModel(
 
     private val _checkedBuildListUiState: MutableStateFlow<List<BuildCategories>> =
         MutableStateFlow(listOf())
+
     val checkedBuildListUiState: StateFlow<List<BuildCategories>> = _checkedBuildListUiState
 
     fun addCheckedBuild(build: BuildCategories) {
@@ -34,6 +37,27 @@ class OverViewViewModel(
                 }
             }
         }
+    }
+    fun deleteCheckedBuild(checkedList: List<BuildCategories>): Boolean {
+        var isBuildDeleted = false
+        try {
+            for (i in checkedList) {
+                if (buildsList.value.containsAll(checkedList)) {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        buildRepository.deleteBuild(i)
+                        if (!buildsList.value.contains(i)) {
+                            isBuildDeleted = true
+                        }
+                    }
+                }
+            }
+
+        } catch (e: Exception) {
+            Log.d("deleteCheckedList Exception", "$e")
+            isBuildDeleted = false
+        }
+        resetCheckedBuildList()
+        return isBuildDeleted
     }
 
     fun removeCheckedBuild(build: BuildCategories) {
@@ -47,7 +71,7 @@ class OverViewViewModel(
         }
     }
 
-    fun resetCheckedBuildList(){
+    private fun resetCheckedBuildList() {
         _checkedBuildListUiState.update {
             listOf()
         }
@@ -59,7 +83,7 @@ class OverViewViewModel(
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5000),
-                initialValue = mutableListOf()
+                initialValue = listOf()
             )
 
     fun getCurrentBuild(buildId: Int) = buildRepository.getBuildStream(buildId)
@@ -68,6 +92,7 @@ class OverViewViewModel(
     //BuildsOverviewFragment.kt
     fun createNewBuild(title: String, category: String, description: String?) {
         val newItemList = mutableListOf<ItemsDefaultCategories>()
+
         val newCharacterStatusList = mutableListOf(
             CharacterStatus("Vigor", 0),
             CharacterStatus("Mind", 0),
@@ -98,32 +123,5 @@ class OverViewViewModel(
     }
 }
 
-
-//    //BuildDetailFragment  -X-
-//    private val _currentBuild = MutableLiveData<BuildCategories>()
-//    val currentBuild: LiveData<BuildCategories> = _currentBuild
-//
-//    //CustomizeBuildFragment -X-
-//    fun setNewAttribute(attributeName: String, isInc: Boolean) {
-//        val currentBuildStatus = _currentBuild.value!!
-//        currentBuildStatus.let {
-//            for (i in (0..it.buildCharacterStatus.lastIndex)) {
-//                val isGreaterThenZero = it.buildCharacterStatus[i].attributeLevel > 0
-//                val isLessThanNinetyNine = it.buildCharacterStatus[i].attributeLevel < 99
-//                if (attributeName == it.buildCharacterStatus[i].attributeName) {
-//                    when {
-//                        isInc && isLessThanNinetyNine -> {
-//                            it.buildCharacterStatus[i].attributeLevel++
-//                        }
-//
-//                        !isInc && isGreaterThenZero -> {
-//                            it.buildCharacterStatus[i].attributeLevel--
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        _currentBuild.postValue(currentBuildStatus)
-//    }
 
 

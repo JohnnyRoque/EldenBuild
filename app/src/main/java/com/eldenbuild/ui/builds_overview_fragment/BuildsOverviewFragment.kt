@@ -22,8 +22,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-const val BUILD_ID = "buildId"
-
 class BuildsOverviewFragment : Fragment() {
     private var _binding: FragmentBuildsOverviewBinding? = null
     private val binding get() = _binding!!
@@ -73,22 +71,21 @@ class BuildsOverviewFragment : Fragment() {
                                         sharedViewModel.removeCheckedBuild(build)
                                         card.isChecked = false
                                     }
-
-
                                 },
                                 buildDetail = { id ->
                                     if (!binding.slidingPaneLayout.isOpen) {
                                         binding.slidingPaneLayout.openPane()
                                     }
                                     launch(Dispatchers.IO) {
-                                        sharedViewModel.getCurrentBuild(id).collect { build ->
-                                            if (CurrentBuild.buildDetail.value?.title == build.title) {
-                                                CurrentBuild.resetCheckedItemList()
-                                            }
-                                            CurrentBuild.getBuildDetail(build)
-                                            Log.d(TAG, "${CurrentBuild.buildDetail.value}")
+                                        sharedViewModel.getCurrentBuild(id).filterNotNull()
+                                            .collect { build ->
+                                                if (CurrentBuild.buildDetail.value?.title == build.title) {
+                                                    CurrentBuild.resetCheckedItemList()
+                                                }
+                                                CurrentBuild.getBuildDetail(build)
+                                                Log.d(TAG, "${CurrentBuild.buildDetail.value}")
 
-                                        }
+                                            }
                                     }
                                 }
                             )
@@ -96,30 +93,59 @@ class BuildsOverviewFragment : Fragment() {
                             val buildAdapter =
                                 binding.buildRecyclerView.adapter as OverviewRecyclerAdapter
                             buildAdapter.checkedBuildList = list
+                            //atualizar notify
+                            buildAdapter.notifyDataSetChanged()
+                        }
+                        if (list.isNotEmpty()) {
+                            binding.addBuildFab.setImageResource(R.drawable.delete_24px)
+
+                            binding.addBuildFab.setOnClickListener {
+                                Dialog.buildDialog(
+                                    requireContext(),
+                                    message = getString(
+                                        R.string.delete_build_dialog_message,
+                                        "${list.size}"
+                                    ),
+                                    title = R.string.delete_builds_dialog_title,
+                                    positiveActionText = getString(R.string.accept_text),
+                                    positiveAction = {
+                                        sharedViewModel.deleteCheckedBuild(list)
+                                    }
+
+                                )
+                            }
+                        } else {
+                            binding.addBuildFab.setImageResource(R.drawable.baseline_add_36)
+                            binding.addBuildFab.setOnClickListener {
+                                Dialog.buildCustomDialog(
+                                    requireContext(),
+                                    layoutInflater
+                                ) { name, type, description ->
+                                    sharedViewModel.createNewBuild(name, type, description)
+
+                                }
+                            }
+                        }
+                    }
+                }
+                launch {
+                    sharedViewModel.buildsList.collect{
+                        if (it.isEmpty()){
+                            binding.detailNavHost.visibility = View.GONE
+
+                        } else{
+                            binding.detailNavHost.visibility = View.VISIBLE
 
                         }
                     }
                 }
 
-                launch {
-                    sharedViewModel.buildsList
-                        .collect {
-                            //Submit new list of Builds
-                            if (it.isNotEmpty()) {
-                                binding.detailNavHost.visibility = View.VISIBLE
-                            }
-                        }
-                }
+
             }
         }
 
         binding.slidingPaneLayout.lockMode = SlidingPaneLayout.LOCK_MODE_LOCKED
-        binding.addBuildFab.setOnClickListener {
-            Dialog.buildCustomDialog(requireContext(), layoutInflater) { name, type, description ->
-                sharedViewModel.createNewBuild(name, type, description)
 
-            }
-        }
         super.onViewCreated(view, savedInstanceState)
     }
 

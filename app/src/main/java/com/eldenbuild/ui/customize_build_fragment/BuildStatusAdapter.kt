@@ -3,6 +3,7 @@ package com.eldenbuild.ui.customize_build_fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,12 +12,14 @@ import com.eldenbuild.databinding.BuildStatusHorizontalBinding
 
 class BuildStatusAdapter(
     val isEditAttributes: Boolean,
-    val setNewLevel: (String, Boolean) -> Unit
+    val setNewLevel: (CharacterStatus) -> Unit
 ) :
     ListAdapter<CharacterStatus, BuildStatusAdapter.BuildStatusViewHolder>(object :
         DiffUtil.ItemCallback<CharacterStatus>() {
-        override fun areItemsTheSame(oldItem: CharacterStatus, newItem: CharacterStatus): Boolean {
-
+        override fun areItemsTheSame(
+            oldItem: CharacterStatus,
+            newItem: CharacterStatus
+        ): Boolean {
             return oldItem.attributeName == newItem.attributeName
         }
 
@@ -35,8 +38,6 @@ class BuildStatusAdapter(
 
     class BuildStatusViewHolder(val binding: BuildStatusHorizontalBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val iconAdd = binding.iconAdd
-        val iconMinus = binding.iconMinus
         fun bind(characterStatus: CharacterStatus) {
 
             binding.apply {
@@ -47,30 +48,32 @@ class BuildStatusAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BuildStatusViewHolder {
-        return BuildStatusViewHolder(
+        return BuildStatusViewHolder (
             BuildStatusHorizontalBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
+
     override fun onBindViewHolder(holder: BuildStatusViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-        holder.iconAdd.setOnClickListener {
-            _itemPosition = holder.adapterPosition
-            setNewLevel(item.attributeName, true)
-        }
 
-        holder.iconMinus.setOnClickListener {
-            _itemPosition = holder.adapterPosition
-            setNewLevel(item.attributeName, false)
+        holder.binding.editAttributeLevel.doAfterTextChanged {
+                if (!it.isNullOrBlank()) {
+                    val newValue = CharacterStatus(item.attributeName,it.toString().toInt())
+                    setNewLevel(newValue)
+                }
+
+
         }
 
         if (isEditAttributes) {
-            holder.apply {
-                iconAdd.visibility = View.VISIBLE
-                iconMinus.visibility = View.VISIBLE
-            }
+            holder.binding.editAttributeLevelLayout.visibility = View.VISIBLE
+            holder.binding.attributeLevel.visibility = View.INVISIBLE
+        } else{
+            holder.binding.editAttributeLevelLayout.visibility = View.INVISIBLE
+            holder.binding.attributeLevel.visibility =View.VISIBLE
         }
     }
 }

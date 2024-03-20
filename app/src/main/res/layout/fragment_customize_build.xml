@@ -16,7 +16,7 @@
 
         <variable
             name="currentBuild"
-            type="com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel.CurrentBuild" />
+            type="com.eldenbuild.data.database.BuildCategories" />
 
     </data>
 
@@ -77,22 +77,23 @@
         <View
             android:id="@+id/divider_status1"
             android:layout_width="1dp"
-            android:layout_height="270dp"
+            android:layout_height="480dp"
             android:layout_marginStart="20dp"
             android:background="@color/line_color"
             android:visibility="invisible"
-            app:layout_dodgeInsetEdges="top"
+            app:layout_dodgeInsetEdges="top|bottom"
             app:layout_insetEdge="start" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/status_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:clipToPadding="true"
             android:orientation="vertical"
+            android:layout_marginEnd="6dp"
             android:overScrollMode="never"
             android:padding="6dp"
-            statusList="@{currentBuild.buildDetail.buildCharacterStatus}"
+            app:statusList="@{currentBuild.buildCharacterStatus}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_dodgeInsetEdges="top|start"
             tools:itemCount="8"

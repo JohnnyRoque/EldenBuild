@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:layout_marginHorizontal="8dp">
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:padding="6dp"
             android:text="@{attribute.attributeName}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Vigor" />
@@ -34,40 +35,35 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="6dp"
-
+            android:layout_marginEnd="8dp"
             android:textAlignment="viewEnd"
-            app:layout_constraintEnd_toStartOf="@+id/icon_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="12" />
 
-        <ImageView
-            android:id="@+id/icon_minus"
-            android:visibility="invisible"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:contentDescription="@{@string/remove_one_level_text(attribute.attributeName)}"
-            android:src="@drawable/arrow_back_ios_new_24px"
-            app:layout_constraintBottom_toBottomOf="@+id/attribute_level"
-            app:layout_constraintEnd_toStartOf="@+id/attribute_level"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <ImageView
-            android:id="@+id/icon_add"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_attribute_level_layout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:contentDescription="@{@string/add_one_level_text(attribute.attributeName)}"
-            android:src="@drawable/arrow_forward_ios_24px"
-            app:layout_constraintBottom_toBottomOf="@+id/attribute_level"
+            android:layout_marginEnd="8dp"
+            app:int_to_string_placeHolder="@{attribute.attributeLevel}"
+            android:minWidth="@dimen/custom_min_width"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:suffixText="/99">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_attribute_level"
+                android:layout_width="match_parent"
+                android:maxLength="2"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

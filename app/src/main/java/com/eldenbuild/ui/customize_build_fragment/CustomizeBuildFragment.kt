@@ -29,7 +29,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 const val CUSTOMIZE_LABEL = "customizeLabel"
 const val IS_FROM_BUILD_DETAIL = "isFromBuildDetail"
 
-
+//Agora o flow esta emitindo valores, antes não estava devido a ao novo valor CharacterStatus ser
+//igual mesmo mundo no level. Solução foi fazer um for e chamar update e listOf(i)
 class CustomizeBuildFragment : Fragment() {
     private var argumentLabel: String? = null
     private var _binding: FragmentCustomizeBuildBinding? = null
@@ -61,16 +62,9 @@ class CustomizeBuildFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        binding.apply {
-            viewModel = sharedViewModel
-            label = argumentLabel
-            lifecycleOwner = viewLifecycleOwner
-            currentBuild = BuildDetailViewModel.CurrentBuild
-        }
-
         val itemAdapter = BuildItemsGridAdapter(
             isItemSelectable = false,
-            checkedItems = { _, _,_ ->   }) { item, itemType ->
+            checkedItems = { _, _, _ -> }) { item, itemType ->
             ItemDetailViewModel.getCurrentItem(item)
             findNavController().navigate(
                 CustomizeBuildFragmentDirections.actionCustomizeBuildFragmentToItemDetailsFragment(
@@ -79,12 +73,28 @@ class CustomizeBuildFragment : Fragment() {
             )
         }
 
-        binding.itemRecyclerView.adapter = itemAdapter
+        val statusAdapter = BuildStatusAdapter(
+            isEditAttributes = false,
+            setNewLevel = {}
+        )
 
-        binding.statusRecyclerView.adapter = BuildStatusAdapter(
-            isEditAttributes = false
-        ) { attName, isInc ->
-//            sharedViewModel.setNewAttribute(attName, isInc)
+        binding.apply {
+            viewModel = sharedViewModel
+            label = argumentLabel
+            lifecycleOwner = viewLifecycleOwner
+            currentBuild = BuildDetailViewModel.buildDetail.value
+            itemRecyclerView.adapter = itemAdapter
+            statusRecyclerView.adapter = statusAdapter
+        }
+
+        binding.fabEdit.setOnClickListener {
+            CustomizeBuildModalBottomSheet(confirmNewAttributes = { statusList ->
+                sharedViewModel.setNewAttribute(statusList)
+            })
+                .show(
+                    requireActivity().supportFragmentManager,
+                    "CustomizeBottomSheet"
+                )
         }
 
         when (argumentLabel) {
@@ -115,17 +125,21 @@ class CustomizeBuildFragment : Fragment() {
                 binding.itemRecyclerView.visibility = View.GONE
                 binding.bottomNavigation.visibility = View.GONE
 
-                binding.fabEdit.setOnClickListener {
-                    CustomizeBuildModalBottomSheet().show(
-                        parentFragmentManager,
-                        "CustomizeBottomSheet"
-                    )
-                }
             }
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+
+                launch {
+                   sharedViewModel.uiStateCharacterStatus.collect{
+                       statusAdapter.notifyDataSetChanged()
+                       Log.d("stateUiStatus","Collect")
+                       Log.d("stateUiStatus","$it")
+
+                   }
+                }
 
                 when (argumentLabel) {
 
@@ -180,7 +194,6 @@ class CustomizeBuildFragment : Fragment() {
                                 R.id.page_1 -> {
 
                                     launch(Dispatchers.IO) {
-
                                         sharedViewModel.listOfWeapons.collect { list ->
                                             sharedViewModel.showList(list)
                                         }
@@ -262,8 +275,11 @@ class CustomizeBuildFragment : Fragment() {
                         }
                     }
                 }
+
             }
         }
+
+
         super.onViewCreated(view, savedInstanceState)
     }
 

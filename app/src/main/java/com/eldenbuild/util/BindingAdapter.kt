@@ -14,6 +14,7 @@ import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
 import com.eldenbuild.ui.builds_overview_fragment.OverviewRecyclerAdapter
 import com.eldenbuild.ui.customize_build_fragment.BuildStatusAdapter
+import com.google.android.material.textfield.TextInputLayout
 
 @BindingAdapter("imageUrl")
 fun bindingImage(imageView: ImageView, imgUrl: String?) {
@@ -29,8 +30,9 @@ fun bindingImage(imageView: ImageView, imgUrl: String?) {
 @BindingAdapter("statusList")
 fun bindStatusLisToRecyclerView(recyclerView: RecyclerView, data: List<CharacterStatus>?) {
     val adapter = recyclerView.adapter as BuildStatusAdapter
-    adapter.notifyItemChanged(BuildStatusAdapter.itemPosition)
     adapter.submitList(data)
+
+
 }
 
 @BindingAdapter("itemList")
@@ -54,6 +56,12 @@ fun setImageInt(imageView: ImageView, image: Int) {
 @BindingAdapter("intToString")
 fun bindIntToString(textView: TextView, intText: Int) {
     textView.text = intText.toString()
+}
+
+
+@BindingAdapter("int_to_string_placeHolder")
+fun bindIntToStringPlaceholder(textInputLayout: TextInputLayout, intText: Int) {
+    textInputLayout.placeholderText = intText.toString()
 }
 
 @BindingAdapter("buildList")

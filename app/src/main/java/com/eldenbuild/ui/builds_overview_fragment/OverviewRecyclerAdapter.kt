@@ -77,13 +77,16 @@ class OverviewRecyclerAdapter(
                     checkedBuilds(card,item,false)
                 }
 
-                else -> buildDetail(item.buildId)
+                else -> {
+                    buildDetail(item.buildId)
+                }
 
             }
-            holder.itemView.setOnLongClickListener {
-                checkedBuilds(card,item,true)
-                true
-            }
+        }
+
+        holder.itemView.setOnLongClickListener {
+            checkedBuilds(card,item,true)
+            true
         }
         when (item.category) {
             context.getString(R.string.arcane_build) -> {

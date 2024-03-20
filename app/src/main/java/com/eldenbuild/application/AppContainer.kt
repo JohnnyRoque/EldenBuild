@@ -63,7 +63,7 @@ val appModule = module {
         BuildDetailViewModel(get())
     }
     viewModel {
-        CustomizeBuildViewModel(get(), savedStateHandle = get())
+        CustomizeBuildViewModel(get(), buildRepository = get(), savedStateHandle = get())
     }
     viewModel {
         ItemDetailViewModel(get(), get())

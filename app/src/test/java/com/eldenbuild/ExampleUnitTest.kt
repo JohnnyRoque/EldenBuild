@@ -9,6 +9,7 @@ import com.eldenbuild.data.network.ItemResponse
 import com.eldenbuild.data.repository.ItemOnlineRepository
 import com.eldenbuild.data.repository.ItemRepository
 import com.eldenbuild.util.Items
+import com.eldenbuild.viewmodel.OverViewViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,6 +44,45 @@ import org.mockito.junit.MockitoJUnitRunner
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
+
+@RunWith(MockitoJUnitRunner::class)
+class TestDeleteBuild() : KoinTest {
+    @get:Rule
+    val mockProviderRule = MockProviderRule.create { clazz ->
+        Mockito.mock(clazz.java)
+    }
+
+    @Mock
+    private val context: Context = Mockito.mock(Context::class.java)
+
+    @get:Rule
+    val koinTestRule = KoinTestRule.create {
+        androidContext(context)
+        printLogger()
+
+        modules(appModule)
+    }
+
+    private val overViewViewModel: OverViewViewModel by inject<OverViewViewModel>()
+
+    @Mock
+    val build: BuildCategories = Mockito.mock(BuildCategories::class.java)
+
+
+    @Test
+    fun deleteBuild() = runTest {
+        val dummy = build.copy(title = "dummy")
+        overViewViewModel.createNewBuild("dummy", category = "test", description = null )
+        val checkList = listOf<BuildCategories>(dummy)
+        backgroundScope.launch {
+        assertTrue(
+            overViewViewModel.deleteCheckedBuild(checkList)
+        )
+        }
+    }
+}
+
+
 class DiTest : KoinTest {
     @get:Rule
     val mockProvider = MockProviderRule.create { clazz ->
@@ -64,11 +104,9 @@ class DiTest : KoinTest {
         }
 
     }
-
-    @Test
-    fun checkDi() {
-    }
 }
+
+
 
 @RunWith(MockitoJUnitRunner::class)
 class TestCheckedItems : KoinTest {
@@ -115,9 +153,19 @@ class TestCheckedItems : KoinTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun deleteItemsFromBuild() {
-        val list1 = mutableListOf<String>("John","Jane","Max","Sarah","Cloe","John","Saint","Carl","Connor")
-        val checkedItems = mutableListOf("Sarah","Cloe","Connor","Saint","Carl","John")
-            list1.removeAll  (checkedItems)
+        val list1 = mutableListOf<String>(
+            "John",
+            "Jane",
+            "Max",
+            "Sarah",
+            "Cloe",
+            "John",
+            "Saint",
+            "Carl",
+            "Connor"
+        )
+        val checkedItems = mutableListOf("Sarah", "Cloe", "Connor", "Saint", "Carl", "John")
+        list1.removeAll(checkedItems)
         assertTrue(list1 != checkedItems)
     }
 
