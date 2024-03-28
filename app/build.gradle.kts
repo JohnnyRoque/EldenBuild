@@ -82,6 +82,11 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.5.3")
     testImplementation("io.insert-koin:koin-test-junit4:3.6.0-alpha3")
 
+    //Paging
+    implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+
+
+    testImplementation("androidx.paging:paging-common-ktx:3.2.1")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:5.10.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")

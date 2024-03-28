@@ -50,7 +50,6 @@
             android:clipToPadding="true"
             android:overScrollMode="never"
             android:padding="8dp"
-            itemList="@{viewModel.currentList}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_dodgeInsetEdges="top"
             app:spanCount="5"
@@ -105,10 +104,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:visibility="invisible"
             android:layout_margin="16dp"
+            android:contentDescription="@string/edit_status_text"
             android:src="@drawable/edit_24px"
-            android:contentDescription="@string/edit_status_text" />
+            android:visibility="invisible" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

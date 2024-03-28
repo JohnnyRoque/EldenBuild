@@ -1,25 +1,23 @@
 package com.eldenbuild.data.repository
 
-import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.data.network.EldenBuildApiService
-import com.eldenbuild.data.network.ItemResponse
-import kotlinx.coroutines.currentCoroutineContext
+import com.eldenbuild.data.network.NETWORK_PAGE_LIMIT
+import com.eldenbuild.util.paging_source.ItemPagingSource
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 
 class ItemOnlineRepository(private val eldenBuildApiService: EldenBuildApiService) :
     ItemRepository {
-    override fun getStreamOfItems(group: String, limit: Int, page: Int): Flow<ItemResponse> = flow {
-
-        while (currentCoroutineContext().isActive) {
-
-            try {
-                emit(eldenBuildApiService.getItems(group, limit, page))
-
-            } catch (e: Exception) {
-                Log.d("ItemResponse", "Empty response")
-            }
-        }
+    override fun getStreamOfItems(group: String): Flow<PagingData<ItemsDefaultCategories>> {
+        return Pager(
+            config = PagingConfig(
+                enablePlaceholders = false,
+                pageSize = NETWORK_PAGE_LIMIT
+            ),
+            pagingSourceFactory = {ItemPagingSource(eldenBuildApiService,group)}
+        ).flow
     }
 }

@@ -1,7 +1,6 @@
 package com.eldenbuild.ui.customize_build_fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,15 +13,23 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.recyclerview.widget.RecyclerView
 import com.eldenbuild.R
+import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.databinding.FragmentCustomizeBuildBinding
 import com.eldenbuild.ui.build_detail_fragment.BuildDetailViewModel
-import com.eldenbuild.ui.build_detail_fragment.BuildItemsGridAdapter
-import com.eldenbuild.ui.builds_overview_fragment.TAG
 import com.eldenbuild.ui.item_detail_fragment.ItemDetailViewModel
-import kotlinx.coroutines.Dispatchers
+import com.eldenbuild.util.Items
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -62,16 +69,7 @@ class CustomizeBuildFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val itemAdapter = BuildItemsGridAdapter(
-            isItemSelectable = false,
-            checkedItems = { _, _, _ -> }) { item, itemType ->
-            ItemDetailViewModel.getCurrentItem(item)
-            findNavController().navigate(
-                CustomizeBuildFragmentDirections.actionCustomizeBuildFragmentToItemDetailsFragment(
-                    type = itemType
-                )
-            )
-        }
+
 
         val statusAdapter = BuildStatusAdapter(
             isEditAttributes = false,
@@ -83,9 +81,11 @@ class CustomizeBuildFragment : Fragment() {
             label = argumentLabel
             lifecycleOwner = viewLifecycleOwner
             currentBuild = BuildDetailViewModel.buildDetail.value
-            itemRecyclerView.adapter = itemAdapter
             statusRecyclerView.adapter = statusAdapter
+            binding.bottomNavigation.selectedItemId = R.id.page_1
+            bindState(sharedViewModel.state,sharedViewModel.pagingDataFlow,sharedViewModel.accept)
         }
+
 
         binding.fabEdit.setOnClickListener {
             CustomizeBuildModalBottomSheet(confirmNewAttributes = { statusList ->
@@ -100,7 +100,7 @@ class CustomizeBuildFragment : Fragment() {
         when (argumentLabel) {
 
             "Equipment" -> {
-
+                binding.itemRecyclerView.visibility = View.VISIBLE
                 binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu)
                 binding.statusRecyclerView.visibility = View.GONE
                 binding.dividerStatus1.visibility = View.GONE
@@ -128,157 +128,21 @@ class CustomizeBuildFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        binding.bottomNavigation.setViewTreeOnBackPressedDispatcherOwner(object :
+            OnBackPressedDispatcherOwner {
+            override val lifecycle: Lifecycle
+                get() = viewLifecycleOwner.lifecycle
+            override val onBackPressedDispatcher: OnBackPressedDispatcher
+                get() = requireActivity().onBackPressedDispatcher
 
+        })
 
-                launch {
-                   sharedViewModel.uiStateCharacterStatus.collect{
-                       statusAdapter.notifyDataSetChanged()
-                       Log.d("stateUiStatus","Collect")
-                       Log.d("stateUiStatus","$it")
-
-                   }
-                }
-
-                when (argumentLabel) {
-
-                    "Equipment" -> {
-
-                        launch {
-                            sharedViewModel.uiState.collect { uiState ->
-                                if (uiState) {
-                                    launch {
-                                        sharedViewModel.listOfWeapons.collect { weaponsList ->
-                                            sharedViewModel.showList(weaponsList)
-                                        }
-                                    }
-                                }
-                                sharedViewModel.changeState(false)
-                            }
-                        }
-
-                        launch {
-
-                            sharedViewModel.currentList.collect { list ->
-                                if (list.isEmpty()) {
-                                    binding.loadingItemsAnimation.visibility = View.VISIBLE
-
-                                } else {
-                                    itemAdapter.submitList(list)
-                                    binding.loadingItemsAnimation.visibility = View.GONE
-                                    binding.itemRecyclerView.visibility = View.VISIBLE
-
-                                }
-                            }
-                        }
-                        binding.bottomNavigation.setViewTreeOnBackPressedDispatcherOwner(object :
-                            OnBackPressedDispatcherOwner {
-                            override val lifecycle: Lifecycle
-                                get() = viewLifecycleOwner.lifecycle
-                            override val onBackPressedDispatcher: OnBackPressedDispatcher
-                                get() = requireActivity().onBackPressedDispatcher
-
-                        })
-
-                        binding.bottomNavigation.findViewTreeOnBackPressedDispatcherOwner()?.let {
-                            it.onBackPressedDispatcher.addCallback(this@CustomizeBuildFragment) {
-                                binding.bottomNavigation.selectedItemId = R.id.page_1
-                                findNavController().navigateUp()
-                            }
-                        }
-
-                        binding.bottomNavigation.setOnItemSelectedListener { item ->
-
-                            when (item.itemId) {
-                                R.id.page_1 -> {
-
-                                    launch(Dispatchers.IO) {
-                                        sharedViewModel.listOfWeapons.collect { list ->
-                                            sharedViewModel.showList(list)
-                                        }
-                                    }
-                                    Log.d(TAG, "PAGE1")
-                                    true
-                                }
-
-                                R.id.page_2 -> {
-
-                                    launch(Dispatchers.IO) {
-                                        sharedViewModel.listOfArmors.collect {
-                                            sharedViewModel.showList(it)
-
-                                        }
-                                    }
-                                    Log.d(TAG, "PAGE2")
-                                    true
-                                }
-
-                                R.id.page_3 -> {
-
-                                    launch(Dispatchers.IO) {
-                                        sharedViewModel.listOfShields.collect {
-                                            sharedViewModel.showList(it)
-                                        }
-                                    }
-                                    true
-                                }
-
-                                R.id.page_4 -> {
-
-                                    launch(Dispatchers.IO) {
-
-                                        sharedViewModel.listOfTalismans.collect {
-                                            sharedViewModel.showList(it)
-                                        }
-                                    }
-                                    true
-                                }
-
-                                else -> false
-                            }
-                        }
-                    }
-
-                    "Magic" -> {
-
-                        launch {
-                            sharedViewModel.currentList.collect {
-
-                                if (it.isEmpty()) {
-                                    binding.loadingItemsAnimation.visibility = View.VISIBLE
-
-                                } else {
-                                    itemAdapter.submitList(it)
-                                    binding.loadingItemsAnimation.visibility = View.GONE
-                                    binding.itemRecyclerView.visibility = View.VISIBLE
-                                }
-                            }
-                        }
-
-                        binding.bottomNavigation.setOnItemSelectedListener { item ->
-
-                            when (item.itemId) {
-
-                                R.id.page_1 -> {
-//                            sharedViewModel.setItem(Items.WEAPON)
-                                    true
-                                }
-
-                                R.id.page_2 -> {
-//                            sharedViewModel.setItem(Items.ARMOR)
-                                    true
-                                }
-
-                                else -> false
-                            }
-                        }
-                    }
-                }
-
+        binding.bottomNavigation.findViewTreeOnBackPressedDispatcherOwner()?.let {
+            it.onBackPressedDispatcher.addCallback(this@CustomizeBuildFragment) {
+                binding.bottomNavigation.selectedItemId = R.id.page_1
+                findNavController().navigateUp()
             }
         }
-
 
         super.onViewCreated(view, savedInstanceState)
     }
@@ -287,4 +151,122 @@ class CustomizeBuildFragment : Fragment() {
         _binding = null
         super.onDestroyView()
     }
+
+    private fun FragmentCustomizeBuildBinding.bindState(
+        itemListUiState: StateFlow<ItemListUiState>,
+        pagingData: Flow<PagingData<ItemsDefaultCategories>>,
+        uiAction: (UiAction) -> Unit
+    ) {
+        val itemsGridAdapter = ItemsGridAdapter { item, itemType ->
+            ItemDetailViewModel.getCurrentItem(item)
+            findNavController().navigate(
+                CustomizeBuildFragmentDirections.actionCustomizeBuildFragmentToItemDetailsFragment(
+                    itemType,
+                    isItemFromBuild = false
+                )
+            )
+        }
+        itemRecyclerView.adapter = itemsGridAdapter
+
+       bottomSheetNavigate(uiAction)
+        bindList(
+            itemsGridAdapter,
+            itemListUiState,
+            pagingData,
+            uiAction
+        )
+
+    }
+
+
+    private fun FragmentCustomizeBuildBinding.bottomSheetNavigate(
+        onQueryChanged: (UiAction.Search) -> Unit
+    ) {
+
+        bottomNavigation.setOnItemSelectedListener { item ->
+            var title = ""
+            when (argumentLabel) {
+                "Equipment" -> {
+                    when (item.itemId) {
+                        R.id.page_1 -> title = Items.WEAPON
+                        R.id.page_2 -> title = Items.ARMOR
+                        R.id.page_3 -> title = Items.SHIELD
+                        R.id.page_4 -> title = Items.TALISMANS
+                    }
+                }
+
+                "Magic" -> {
+                    when (item.itemId) {
+                        R.id.page_1 -> title = Items.WEAPON
+                        R.id.page_2 -> title = Items.ARMOR
+                        R.id.page_3 -> title = Items.SHIELD
+                        R.id.page_4 -> title = Items.TALISMANS
+                    }
+                }
+            }
+            updateItemListFromInput(title, onQueryChanged)
+            true
+
+        }
+
+    }
+
+
+
+    private fun FragmentCustomizeBuildBinding.updateItemListFromInput(
+        menuItemTitle: String,
+        onQueryChanged: (UiAction.Search) -> Unit
+    ) {
+
+        menuItemTitle.let { title ->
+            if (title.isNotEmpty()) {
+                itemRecyclerView.scrollToPosition(0)
+                onQueryChanged(UiAction.Search(title))
+            }
+        }
+    }
+
+    private fun FragmentCustomizeBuildBinding.bindList(
+        itemsGridAdapter: ItemsGridAdapter,
+        uiState: StateFlow<ItemListUiState>,
+        pagingData: Flow<PagingData<ItemsDefaultCategories>>,
+        onScrollChanged: (UiAction.Scroll) -> Unit
+    ) {
+        itemRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy != 0) onScrollChanged(UiAction.Scroll(currentGroup = uiState.value.group))
+                super.onScrolled(recyclerView, dx, dy)
+            }
+
+        })
+        val notLoading = itemsGridAdapter.loadStateFlow
+            // Only emit when REFRESH LoadState for RemoteMediator changes.
+
+            .distinctUntilChangedBy { it.source.refresh }
+            // Only react to cases where Remote REFRESH completes i.e., NotLoading.
+
+            .map { it.source.refresh is LoadState.NotLoading }
+        val hasNotScrolledForCurrentSearch = uiState.map {
+            it.hasNotScrolledForCurrentPosition
+        }.distinctUntilChanged()
+
+        val shouldScrollTop = combine(
+            notLoading,
+            hasNotScrolledForCurrentSearch,
+            Boolean::and
+        )
+            .distinctUntilChanged()
+
+        lifecycleScope.launch {
+            pagingData.collectLatest(itemsGridAdapter::submitData)
+        }
+
+        lifecycleScope.launch {
+            shouldScrollTop.collect { scrollTop ->
+                if (scrollTop) itemRecyclerView.scrollToPosition(0)
+            }
+        }
+
+    }
 }
+

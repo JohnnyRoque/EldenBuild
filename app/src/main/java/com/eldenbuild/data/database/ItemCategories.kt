@@ -53,7 +53,7 @@ data class ItemsDefaultCategories(
     var fromBuild : String = ""
 )
 
-data class StatsAmount(val name: String, var amount: Int?)
+data class StatsAmount(val name: String, var amount: Any?)
 data class StatsScaling(val name: String, val scaling: String = "")
 
 

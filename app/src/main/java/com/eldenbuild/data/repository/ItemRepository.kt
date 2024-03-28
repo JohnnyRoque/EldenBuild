@@ -1,9 +1,10 @@
 package com.eldenbuild.data.repository
 
-import com.eldenbuild.data.network.ItemResponse
+import androidx.paging.PagingData
+import com.eldenbuild.data.database.ItemsDefaultCategories
 import kotlinx.coroutines.flow.Flow
 
 interface ItemRepository {
-    fun getStreamOfItems(group: String, limit:Int, page: Int): Flow<ItemResponse>
+    fun getStreamOfItems(group: String): Flow<PagingData<ItemsDefaultCategories>>
 
 }

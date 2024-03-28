@@ -18,11 +18,12 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
+
+private const val BASE_URL = "https://eldenring.fanapis.com/api/"
+
 /**
  * App container for Dependency injection.
  */
-private const val BASE_URL = "https://eldenring.fanapis.com/api/"
-
 
 val appModule = module {
 
@@ -31,6 +32,7 @@ val appModule = module {
             .add(KotlinJsonAdapterFactory())
             .build()
     }
+
 
     single {
         Retrofit.Builder()

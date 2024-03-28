@@ -14,13 +14,14 @@ import com.google.android.material.card.MaterialCardView
 //trocar os add por paramentro
 class BuildItemsGridAdapter(
     private val isItemSelectable: Boolean,
-    var checkedItemList : List<ItemsDefaultCategories> = listOf(),
+    var checkedItemList: List<ItemsDefaultCategories> = listOf(),
     val checkedItems: ((MaterialCardView, ItemsDefaultCategories, Boolean) -> Unit),
     val openItemDetail: (ItemsDefaultCategories, String) -> Unit
 
 ) :
     ListAdapter<ItemsDefaultCategories, BuildItemsGridAdapter.BuildItemsViewHolder>(object :
         DiffUtil.ItemCallback<ItemsDefaultCategories>() {
+
         override fun areItemsTheSame(
             oldItem: ItemsDefaultCategories,
             newItem: ItemsDefaultCategories
@@ -42,7 +43,7 @@ class BuildItemsGridAdapter(
 
         fun bind(itemsDefaultCategories: ItemsDefaultCategories) {
             binding.apply {
-                itemImage = itemsDefaultCategories
+                item = itemsDefaultCategories
                 executePendingBindings()
             }
         }
@@ -60,45 +61,49 @@ class BuildItemsGridAdapter(
 
     override fun onBindViewHolder(holder: BuildItemsViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
-        val card = holder.card
+        item?.let {
 
-        if (checkedItemList.isNotEmpty()) {
-            for (i in (0..checkedItemList.lastIndex)) {
-                card.isChecked = checkedItemList.contains(item)
+
+            holder.bind(item)
+            val card = holder.card
+
+            if (checkedItemList.isNotEmpty()) {
+                for (i in (0..checkedItemList.lastIndex)) {
+                    card.isChecked = checkedItemList.contains(item)
+                }
+            } else {
+                card.isChecked = false
             }
-        } else {
-            card.isChecked = false
-        }
 
-        holder.card.setOnClickListener {
+            holder.card.setOnClickListener {
 
-            when {
-                !card.isChecked && checkedItemList.isNotEmpty()  -> {
+                when {
+                    !card.isChecked && checkedItemList.isNotEmpty() -> {
+                        checkedItems(card, item, true)
+
+                    }
+
+                    card.isChecked && checkedItemList.isNotEmpty() -> {
+                        checkedItems(card, item, false)
+
+
+                    }
+
+                    else -> {
+                        openItemDetail(item, item.itemType)
+                        Log.d("ItemFrom", "Item is from = ${item.fromBuild}")
+
+                    }
+                }
+            }
+
+            holder.card.setOnLongClickListener {
+                if (isItemSelectable) {
                     checkedItems(card, item, true)
-
                 }
+                true
 
-                card.isChecked && checkedItemList.isNotEmpty() -> {
-                    checkedItems(card, item, false)
-
-
-                }
-
-                else -> {
-                    openItemDetail(item, item.itemType)
-                    Log.d("ItemFrom", "Item is from = ${item.fromBuild}")
-
-                }
             }
-        }
-
-        holder.card.setOnLongClickListener {
-            if (isItemSelectable) {
-                checkedItems(card, item, true)
-            }
-            true
-
         }
     }
 }
