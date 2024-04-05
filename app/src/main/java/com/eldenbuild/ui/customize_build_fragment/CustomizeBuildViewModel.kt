@@ -96,66 +96,6 @@ class CustomizeBuildViewModel(
     private fun getItemList(group: String): Flow<PagingData<ItemsDefaultCategories>> =
         itemOnlineRepository.getStreamOfItems(group)
 
-//    .filterNotNull()
-//    .map { itemResponse ->
-//        itemResponse.data.also { list ->
-//            list.sortedBy { it.category }
-//            list.map {
-//                when (group) {
-//                    Items.WEAPON -> it.itemType = Items.WEAPON
-//                    Items.ARMOR -> it.itemType = Items.ARMOR
-//                    Items.SHIELD -> it.itemType = Items.SHIELD
-//                    Items.TALISMANS -> it.itemType = Items.TALISMANS
-//                }
-//            }
-//        }
-//    }
-
-//    val listOfWeapons: StateFlow<List<ItemsDefaultCategories>> =
-//        getItemList(Items.WEAPON).stateIn(
-//            viewModelScope,
-//            SharingStarted.WhileSubscribed(5000),
-//            listOf()
-//        )
-//
-//    val listOfArmors: StateFlow<List<ItemsDefaultCategories>> =
-//        getItemList(Items.ARMOR).stateIn(
-//            viewModelScope,
-//            SharingStarted.WhileSubscribed(5000),
-//            listOf()
-//        )
-//
-//    val listOfShields: StateFlow<List<ItemsDefaultCategories>> =
-//        getItemList(Items.SHIELD).stateIn(
-//            viewModelScope,
-//            SharingStarted.WhileSubscribed(5000),
-//            listOf()
-//        )
-//    val listOfTalismans: StateFlow<List<ItemsDefaultCategories>> =
-//        getItemList(Items.TALISMANS).stateIn(
-//            viewModelScope,
-//            SharingStarted.WhileSubscribed(5000),
-//            listOf()
-//        )
-
-    val uiState: StateFlow<Boolean> = (
-            savedStateHandle.getStateFlow(
-                IS_FROM_BUILD_DETAIL, false
-            ))
-
-    val changeState: (Boolean) -> Unit = {
-        savedStateHandle[IS_FROM_BUILD_DETAIL] = it
-    }
-
-    private val _currentList = MutableStateFlow<List<ItemsDefaultCategories>>(listOf())
-    val currentList: StateFlow<List<ItemsDefaultCategories>> = _currentList
-    fun showList(itemList: List<ItemsDefaultCategories>) {
-        _currentList.value = itemList
-
-    }
-
-
-
 
     private val _uiStateCharacterStatus: MutableStateFlow<List<CharacterStatus>> =
         MutableStateFlow(listOf())
@@ -167,7 +107,6 @@ class CustomizeBuildViewModel(
                 listOf(i)
             }
         }
-
     }
 
     fun setNewAttribute(

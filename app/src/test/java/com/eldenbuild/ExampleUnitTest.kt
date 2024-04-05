@@ -8,20 +8,13 @@ import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.data.network.ItemResponse
 import com.eldenbuild.data.repository.ItemOnlineRepository
 import com.eldenbuild.data.repository.ItemRepository
-import com.eldenbuild.util.Items
 import com.eldenbuild.viewmodel.OverViewViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -46,7 +39,7 @@ import org.mockito.junit.MockitoJUnitRunner
  */
 
 @RunWith(MockitoJUnitRunner::class)
-class TestDeleteBuild() : KoinTest {
+class TestDeleteBuild : KoinTest {
     @get:Rule
     val mockProviderRule = MockProviderRule.create { clazz ->
         Mockito.mock(clazz.java)
@@ -142,15 +135,14 @@ class TestCheckedItems : KoinTest {
         addString("t")
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             addString("2")
-            stateTest.collect() {}
+            stateTest.collect {}
 
         }
         addString("k")
-        Assert.assertTrue(stateTest.value.contains("k") && stateTest.value.contains("2"))
+        assertTrue(stateTest.value.contains("k") && stateTest.value.contains("2"))
 
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun deleteItemsFromBuild() {
         val list1 = mutableListOf<String>(
@@ -199,123 +191,72 @@ class TestCheckedItems : KoinTest {
                 fakeList
             )
 
-            fun getItemList(group: String): Flow<List<ItemsDefaultCategories>> {
-                val limit = 50
-                var page = 0
-                Mockito.`when`(fakeItemRepository.getStreamOfItems(group, limit, page)).thenReturn(
-                    flow {
-                        emit(itemResponse)
-                    }
+            @Test
+            fun statsMap() {
+                data class Item(
+                    val title: String,
                 )
-                return fakeItemRepository.getStreamOfItems(group, limit, page)
-                    .filterNotNull()
-                    .map { itemResponse ->
-                        itemResponse.data.also { list ->
-                            list.sortedBy { it.category }
-                            list.map {
-                                when (group) {
-                                    Items.WEAPON -> it.itemType = Items.WEAPON
-                                    Items.ARMOR -> it.itemType = Items.ARMOR
-                                    Items.SHIELD -> it.itemType = Items.SHIELD
-                                    Items.TALISMANS -> it.itemType = Items.TALISMANS
-                                }
-                            }
+
+                val list = mutableListOf(Item("Hookclaws"))
+
+                fun addNewItem(item: Item) {
+                    var sameItemCount = 1
+
+                    for (i in list) {
+                        if (i.title.substringBefore("(") == item.title && list.contains(item)) {
+                            sameItemCount++
                         }
                     }
-            }
+                    when {
+                        sameItemCount > 1 -> {
 
-            val list = getItemList(Items.WEAPON).last()
-            assertEquals(50, list.size)
-
-        }
-
-        @Test
-        fun addition_isCorrect() {
-            assertEquals(4, 2 + 2)
-        }
-
-//    @Test
-//    fun sortList() {
-//        var list1: List<ItemsDefaultCategories>
-//        var list2: List<ItemsDefaultCategories>
-////
-////        runBlocking {
-////            list1 = EldenBuildApi.retrofitService.getArmors().data
-////            list2 = EldenBuildApi.retrofitService.getArmors().data
-////        }
-//        val peopleNames = listOf("Fred", "Ann", "Barbara", "Joe")
-//        println(peopleNames.sorted())
-//        list1.sortedBy { it.category }
-//
-//        assertEquals("Resultado listas $list1 and $list2", list1, list2)
-//
-
-
-        @Test
-        fun statsMap() {
-            data class Item(
-                val title: String,
-            )
-
-            val list = mutableListOf(Item("Hookclaws"))
-
-            fun addNewItem(item: Item) {
-                var sameItemCount = 1
-
-                for (i in list) {
-                    if (i.title.substringBefore("(") == item.title && list.contains(item)) {
-                        sameItemCount++
-                    }
-                }
-                when {
-                    sameItemCount > 1 -> {
-
-                        var newItem = item.copy(
-                            title = item.title + "($sameItemCount)"
-                        )
-                        if (list.contains(newItem)) {
-                            newItem = item.copy(
-                                title = item.title + "(${sameItemCount.dec()})"
+                            var newItem = item.copy(
+                                title = item.title + "($sameItemCount)"
                             )
+                            if (list.contains(newItem)) {
+                                newItem = item.copy(
+                                    title = item.title + "(${sameItemCount.dec()})"
+                                )
+                            }
+                            list.add(newItem)
                         }
-                        list.add(newItem)
-                    }
 
-                    else -> {
-                        list.add(item)
+                        else -> {
+                            list.add(item)
+                        }
                     }
                 }
+
+                addNewItem(Item("Hookclaws"))
+                addNewItem(Item("Hookclaws"))
+                list.removeAt(1)
+                addNewItem(Item("Sword"))
+                addNewItem(Item("Sword"))
+                addNewItem(Item("Hookclaws"))
+                addNewItem(Item("Sword"))
+                list.removeAt(0)
+                addNewItem(Item("Hookclaws"))
+
+
+                addNewItem(Item("Hookclaws"))
+
+
+                assertEquals(
+                    listOf(Item("Hookclaws"), Item("Hookclaws(2)"), Item("Hookclaws(3)")),
+                    list
+                )
+
             }
-
-            addNewItem(Item("Hookclaws"))
-            addNewItem(Item("Hookclaws"))
-            list.removeAt(1)
-            addNewItem(Item("Sword"))
-            addNewItem(Item("Sword"))
-            addNewItem(Item("Hookclaws"))
-            addNewItem(Item("Sword"))
-            list.removeAt(0)
-            addNewItem(Item("Hookclaws"))
-
-
-            addNewItem(Item("Hookclaws"))
-
-
-            assertEquals(
-                listOf(Item("Hookclaws"), Item("Hookclaws(2)"), Item("Hookclaws(3)")),
-                list
-            )
-
         }
-    }
 
 
-    fun setNewAttribute(attribute: Int, isInc: Boolean): Int {
-        val add: (Int) -> Int = { it + 1 }
-        val sub: (Int) -> Int = { it - 1 }
-        return when {
-            !isInc && attribute > 0 -> sub(attribute)
-            else -> add(attribute)
+        fun setNewAttribute(attribute: Int, isInc: Boolean): Int {
+            val add: (Int) -> Int = { it + 1 }
+            val sub: (Int) -> Int = { it - 1 }
+            return when {
+                !isInc && attribute > 0 -> sub(attribute)
+                else -> add(attribute)
+            }
         }
     }
 }

@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="EldenBuildAndroidUnitTest">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -17,6 +20,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2023-12-29T20:27:26.343602Z" />
         </State>
+      </entry>
+      <entry key="testOpenBuild()">
+        <State />
       </entry>
     </value>
   </component>

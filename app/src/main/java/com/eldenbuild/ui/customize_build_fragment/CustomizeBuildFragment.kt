@@ -1,6 +1,7 @@
 package com.eldenbuild.ui.customize_build_fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,9 @@ import androidx.activity.setViewTreeOnBackPressedDispatcherOwner
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -34,10 +37,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 const val CUSTOMIZE_LABEL = "customizeLabel"
-const val IS_FROM_BUILD_DETAIL = "isFromBuildDetail"
 
-//Agora o flow esta emitindo valores, antes não estava devido a ao novo valor CharacterStatus ser
-//igual mesmo mundo no level. Solução foi fazer um for e chamar update e listOf(i)
+//Now the flow is outputting values, before it wasn't due to the new CharacterStatus value being
+//the same as the world at level. Solution was to make a for and call update and listOf(i)
 class CustomizeBuildFragment : Fragment() {
     private var argumentLabel: String? = null
     private var _binding: FragmentCustomizeBuildBinding? = null
@@ -56,7 +58,6 @@ class CustomizeBuildFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding =
             DataBindingUtil.inflate(
                 inflater,
@@ -68,8 +69,6 @@ class CustomizeBuildFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-
 
         val statusAdapter = BuildStatusAdapter(
             isEditAttributes = false,
@@ -83,9 +82,8 @@ class CustomizeBuildFragment : Fragment() {
             currentBuild = BuildDetailViewModel.buildDetail.value
             statusRecyclerView.adapter = statusAdapter
             binding.bottomNavigation.selectedItemId = R.id.page_1
-            bindState(sharedViewModel.state,sharedViewModel.pagingDataFlow,sharedViewModel.accept)
+            bindState(sharedViewModel.state, sharedViewModel.pagingDataFlow, sharedViewModel.accept)
         }
-
 
         binding.fabEdit.setOnClickListener {
             CustomizeBuildModalBottomSheet(confirmNewAttributes = { statusList ->
@@ -109,11 +107,20 @@ class CustomizeBuildFragment : Fragment() {
             }
 
             "Magic" -> {
-
+                binding.itemRecyclerView.visibility = View.VISIBLE
                 binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu_magic)
                 binding.statusRecyclerView.visibility = View.GONE
                 binding.dividerStatus1.visibility = View.GONE
                 binding.fabEdit.visibility = View.GONE
+                lifecycleScope.launch {
+                    sharedViewModel.state.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                        .collect {
+                            if (it.group == Items.WEAPON) {
+                                binding.bottomNavigation.selectedItemId = R.id.page_1
+                            }
+                        }
+                }
+
 
             }
 
@@ -125,6 +132,16 @@ class CustomizeBuildFragment : Fragment() {
                 binding.itemRecyclerView.visibility = View.GONE
                 binding.bottomNavigation.visibility = View.GONE
 
+                lifecycleScope.launch {
+                    sharedViewModel.uiStateCharacterStatus.flowWithLifecycle(
+                        lifecycle, Lifecycle.State.STARTED
+                    ).collect {
+                        statusAdapter.notifyDataSetChanged()
+                        Log.d("stateUiStatus", "Collect")
+                        Log.d("stateUiStatus", "$it")
+
+                    }
+                }
             }
         }
 
@@ -165,26 +182,25 @@ class CustomizeBuildFragment : Fragment() {
                     isItemFromBuild = false
                 )
             )
+            Log.d("itemDetail", "$item")
         }
         itemRecyclerView.adapter = itemsGridAdapter
 
-       bottomSheetNavigate(uiAction)
+        bottomSheetNavigate(uiAction)
         bindList(
             itemsGridAdapter,
             itemListUiState,
             pagingData,
             uiAction
         )
-
     }
-
 
     private fun FragmentCustomizeBuildBinding.bottomSheetNavigate(
         onQueryChanged: (UiAction.Search) -> Unit
     ) {
-
         bottomNavigation.setOnItemSelectedListener { item ->
             var title = ""
+
             when (argumentLabel) {
                 "Equipment" -> {
                     when (item.itemId) {
@@ -197,10 +213,10 @@ class CustomizeBuildFragment : Fragment() {
 
                 "Magic" -> {
                     when (item.itemId) {
-                        R.id.page_1 -> title = Items.WEAPON
-                        R.id.page_2 -> title = Items.ARMOR
-                        R.id.page_3 -> title = Items.SHIELD
-                        R.id.page_4 -> title = Items.TALISMANS
+                        R.id.page_1 -> title = Items.INCANTATIONS
+                        R.id.page_2 -> title = Items.SORCERIES
+                        R.id.page_3 -> title = Items.SPIRITS
+                        R.id.page_4 -> title = Items.ASHES_OF_WAR
                     }
                 }
             }
@@ -210,8 +226,6 @@ class CustomizeBuildFragment : Fragment() {
         }
 
     }
-
-
 
     private fun FragmentCustomizeBuildBinding.updateItemListFromInput(
         menuItemTitle: String,
@@ -258,14 +272,19 @@ class CustomizeBuildFragment : Fragment() {
             .distinctUntilChanged()
 
         lifecycleScope.launch {
-            pagingData.collectLatest(itemsGridAdapter::submitData)
-        }
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    pagingData.collectLatest(itemsGridAdapter::submitData)
+                }
 
-        lifecycleScope.launch {
-            shouldScrollTop.collect { scrollTop ->
-                if (scrollTop) itemRecyclerView.scrollToPosition(0)
+                launch {
+                    shouldScrollTop.collect { scrollTop ->
+                        if (scrollTop) itemRecyclerView.scrollToPosition(0)
+                    }
+                }
             }
         }
+
 
     }
 }

@@ -51,7 +51,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="6dp"
-                android:text="@{@string/weight_text(viewModel.itemDetail.weight)}"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
                 app:layout_constraintStart_toEndOf="@id/divider1"
                 app:layout_constraintTop_toBottomOf="@id/category_text_view"
@@ -144,13 +143,14 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_amount2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:orientation="vertical"
                 android:overScrollMode="never"
                 android:padding="6dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/divider3"
                 app:layout_constraintTop_toBottomOf="@+id/stats_text2"
                 tools:listitem="@layout/stats_view_design" />

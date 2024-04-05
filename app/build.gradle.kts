@@ -15,8 +15,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.eldenbuild.CustomInstrumentationTestRunner"
     }
 
     buildTypes {
@@ -68,6 +67,7 @@ dependencies {
 
     //Room
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.test.espresso:espresso-contrib:3.5.1")
     kapt("androidx.room:room-compiler:2.6.1")
 
     //Coroutines Support for Room
@@ -82,6 +82,9 @@ dependencies {
     implementation("io.insert-koin:koin-android:3.5.3")
     testImplementation("io.insert-koin:koin-test-junit4:3.6.0-alpha3")
 
+
+
+
     //Paging
     implementation("androidx.paging:paging-runtime-ktx:3.2.1")
 
@@ -94,6 +97,13 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
     // Robolectric environment
     testImplementation("androidx.test:core-ktx:1.5.0")
+    //Instrumented test
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+
+    //Optional -- UI testing with UI Automator
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
     androidTestImplementation("androidx.fragment:fragment-testing:1.6.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

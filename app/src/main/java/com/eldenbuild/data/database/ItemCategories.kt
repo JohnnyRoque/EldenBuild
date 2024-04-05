@@ -20,9 +20,12 @@ data class ItemsDefaultCategories(
 
     val slots: Int = 0,
 
+    val effects: String = "",
+
     val effect: String = "",
 
-    val requires: String = "",
+
+    val requires: List<StatsAmount>? = listOf(),
 
     val affinity: String = "",
 
@@ -53,7 +56,7 @@ data class ItemsDefaultCategories(
     var fromBuild : String = ""
 )
 
-data class StatsAmount(val name: String, var amount: Any?)
+data class StatsAmount(val name: String, var amount: Double?)
 data class StatsScaling(val name: String, val scaling: String = "")
 
 

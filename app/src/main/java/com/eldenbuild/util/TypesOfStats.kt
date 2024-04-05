@@ -9,4 +9,5 @@ object TypesOfStats {
     val attributesRequired = R.string.attributes_required
     val resistance = R.string.resistance_text
     val damageNegation = R.string.damage_negation
+    val requires =R.string.text_requires
 }

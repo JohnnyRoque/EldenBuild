@@ -74,6 +74,9 @@ class ItemDetailsFragment : Fragment() {
                             .show()
                     }
                     binding.categoryTextView.text = itemDetail.category
+                    binding.weightTextView.text =
+                        getString(R.string.weight_text, "${itemDetail.weight}")
+
 
                     when (arguments?.getString(TYPE)) {
                         Items.WEAPON -> {
@@ -99,6 +102,7 @@ class ItemDetailsFragment : Fragment() {
                             binding.divider5.visibility = View.GONE
 
                         }
+
                         Items.SHIELD -> {
                             amountAdapter.submitList(itemDetail.attack)
                             amountAdapter2.submitList(itemDetail.defence)
@@ -109,14 +113,76 @@ class ItemDetailsFragment : Fragment() {
                             binding.statsText3.setText(TypesOfStats.attributesScaling)
                             binding.statsText4.setText(TypesOfStats.attributesRequired)
                         }
+
                         Items.TALISMANS -> {
                             binding.divider2.visibility = View.GONE
                             binding.divider3.visibility = View.GONE
                             binding.divider4.visibility = View.GONE
                             binding.divider5.visibility = View.GONE
-                            binding.categoryTextView.text = getString(R.string.effect_text,
+                            binding.categoryTextView.text = getString(
+                                R.string.effect_text,
                                 itemDetail.effect
                             )
+                        }
+
+                        Items.SPIRITS -> {
+                            binding.categoryTextView.text = getString(
+                                R.string.effect_text,
+                                itemDetail.effect
+                            )
+
+                            binding.weightTextView.text =
+                                getString(
+                                    R.string.hp_cost_and_fp_cost,
+                                    "${itemDetail.hpCost}",
+                                    "${itemDetail.fpCost}"
+                                )
+
+                            binding.divider2.visibility = View.GONE
+                            binding.divider3.visibility = View.GONE
+                            binding.divider4.visibility = View.GONE
+                            binding.divider5.visibility = View.GONE
+
+
+                        }
+
+                        Items.ASHES_OF_WAR -> {
+                            binding.categoryTextView.text = getString (
+                                R.string.skill_text,
+                                itemDetail.skill
+                            )
+
+                            binding.weightTextView.text =
+                                getString(
+                                    R.string.affinity_text,
+                                    itemDetail.affinity
+                                )
+
+                            binding.divider2.visibility = View.GONE
+                            binding.divider3.visibility = View.GONE
+                            binding.divider4.visibility = View.GONE
+                            binding.divider5.visibility = View.GONE
+                        }
+
+                            else -> {
+                            binding.categoryTextView.text = getString(
+                                R.string.effect_text,
+                                itemDetail.effects
+                            )
+                            binding.statsText.setText(TypesOfStats.requires)
+
+
+                            amountAdapter.submitList(itemDetail.requires)
+                            binding.weightTextView.text =
+                                getString(
+                                    R.string.mp_cost_and_slots,
+                                    "${itemDetail.cost}",
+                                    "${itemDetail.slots}"
+                                )
+                            binding.divider4.visibility = View.GONE
+                            binding.divider5.visibility = View.GONE
+                            binding.divider3.visibility = View.GONE
+
                         }
                     }
                 }

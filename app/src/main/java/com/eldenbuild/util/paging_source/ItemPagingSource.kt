@@ -30,6 +30,11 @@ class ItemPagingSource(
                     Items.ARMOR -> it.itemType = Items.ARMOR
                     Items.SHIELD -> it.itemType = Items.SHIELD
                     Items.TALISMANS -> it.itemType = Items.TALISMANS
+                    Items.INCANTATIONS -> it.itemType = Items.INCANTATIONS
+                    Items.SORCERIES -> it.itemType = Items.SORCERIES
+                    Items.SPIRITS -> it.itemType = Items.SPIRITS
+                    Items.ASHES_OF_WAR -> it.itemType = Items.ASHES_OF_WAR
+
                 }
             }
             val nextKey = if (items.isEmpty()) {

@@ -15,3 +15,16 @@ class EldenBuildApplication: Application() {
         }
     }
 }
+
+class TestEldenBuildApplication : Application(){
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidLogger()
+            androidContext(this@TestEldenBuildApplication)
+            modules(appModule,instrumentedTestModule)
+        }
+    }
+}
+
+

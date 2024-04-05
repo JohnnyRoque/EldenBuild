@@ -4,6 +4,8 @@
     <string name="weight_text">Weight: %1$s</string>
     <string name="stats_text">%1$s: %2$s</string>
     <string name="effect_text">Effect : %1$s</string>
+    <string name="skill_text">Skill : %1$s</string>
+    <string name="affinity_text">Affinity : %1$s</string>
     <string name="delete_build_dialog_message">%1$s Build will be permanently removed.</string>
     <string name="delete_items_dialog_message">%1$s Items will be removed from the build.</string>
     <string name="delete_items_dialog_title">Delete selected Items?</string>
@@ -17,6 +19,10 @@
     <string name="load_weapons">Load Weapons</string>
     <string name="resistance_text">Resistance</string>
     <string name="damage_negation">Damage Negation</string>
+    <string name="text_requires">Required Stats</string>
+    <string name="mp_cost_and_slots">Mp cost: %1$s Slots: %2$s</string>
+    <string name="hp_cost_and_fp_cost">Hp cost: %1$s Fp: %2$s</string>
+
     <string name="intelligence_build">Intelligence build</string>
     <string name="faith_build">Faith build</string>
     <string name="arcane_build">Arcane build</string>
@@ -46,4 +52,5 @@
     <string name="confirm_text">confirm</string>
     <string name="delete_text">Delete</string>
     <string name="delete_content_description">delete item</string>
+    <string name="title_ashes_of_war">Ashes of War</string>
 </resources>
