@@ -30,11 +30,7 @@ class BuildStatusAdapter(
             return oldItem.attributeLevel == newItem.attributeLevel
         }
     }) {
-    companion object {
-        private var _itemPosition = 0
-        val itemPosition get() = _itemPosition
 
-    }
 
     class BuildStatusViewHolder(val binding: BuildStatusHorizontalBinding) :
         RecyclerView.ViewHolder(binding.root) {

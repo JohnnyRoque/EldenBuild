@@ -10,10 +10,10 @@ import com.eldenbuild.data.database.ItemsDefaultCategories
 import com.eldenbuild.databinding.ItemSelectionGridBinding
 import com.google.android.material.card.MaterialCardView
 
-// Colocar um item como parametro para que seja adiciona a lista, retorno Unit?
-//trocar os add por paramentro
 class BuildItemsGridAdapter(
     private val isItemSelectable: Boolean,
+   private var _position: Int = RecyclerView.NO_POSITION,
+    val position: Int = RecyclerView.NO_POSITION,
     var checkedItemList: List<ItemsDefaultCategories> = listOf(),
     val checkedItems: ((MaterialCardView, ItemsDefaultCategories, Boolean) -> Unit),
     val openItemDetail: (ItemsDefaultCategories, String) -> Unit
@@ -61,8 +61,8 @@ class BuildItemsGridAdapter(
 
     override fun onBindViewHolder(holder: BuildItemsViewHolder, position: Int) {
         val item = getItem(position)
-        item?.let {
 
+        item?.let {
 
             holder.bind(item)
             val card = holder.card
@@ -80,12 +80,10 @@ class BuildItemsGridAdapter(
                 when {
                     !card.isChecked && checkedItemList.isNotEmpty() -> {
                         checkedItems(card, item, true)
-
                     }
 
                     card.isChecked && checkedItemList.isNotEmpty() -> {
                         checkedItems(card, item, false)
-
 
                     }
 
@@ -99,6 +97,9 @@ class BuildItemsGridAdapter(
 
             holder.card.setOnLongClickListener {
                 if (isItemSelectable) {
+                    this._position = holder.layoutPosition
+                    Log.d("ItemPosition", "Item LayoutPosition = $position")
+
                     checkedItems(card, item, true)
                 }
                 true

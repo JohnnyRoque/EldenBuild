@@ -15,9 +15,12 @@ const val TAG = "ItemId"
 
 class OverviewRecyclerAdapter(
     private val context: Context,
-    var checkedBuildList: List<BuildCategories> = listOf<BuildCategories>(),
-    val checkedBuilds : ((MaterialCardView,BuildCategories,Boolean)-> Unit),
-    val buildDetail: (Int) -> Unit) :
+    private var _position: Int = RecyclerView.NO_POSITION,
+    val position: Int = _position,
+    var checkedBuildList: List<BuildCategories> = listOf(),
+    val checkedBuilds: ((MaterialCardView, BuildCategories, Boolean) -> Unit),
+    val buildDetail: (Int) -> Unit
+) :
     ListAdapter<BuildCategories, OverviewRecyclerAdapter.BuildViewHolder>(object :
         DiffUtil.ItemCallback<BuildCategories>() {
 
@@ -37,7 +40,7 @@ class OverviewRecyclerAdapter(
     class BuildViewHolder(val binding: BuildSelectionVerticalBinding) :
         RecyclerView.ViewHolder(binding.root) {
         val buildImage = binding.buildImage
-        val card  =  binding.buildCard
+        val card = binding.buildCard
 
         fun bind(buildCategories: BuildCategories) {
             binding.apply {
@@ -58,7 +61,7 @@ class OverviewRecyclerAdapter(
     override fun onBindViewHolder(holder: BuildViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-        val card  = holder.card
+        val card = holder.card
 
         if (checkedBuildList.isNotEmpty()) {
             for (i in 0..checkedBuildList.lastIndex) {
@@ -70,11 +73,13 @@ class OverviewRecyclerAdapter(
 
         holder.itemView.setOnClickListener {
             when {
-                !card.isChecked && checkedBuildList.isNotEmpty() ->{
-                    checkedBuilds(card,item,true)
+                !card.isChecked && checkedBuildList.isNotEmpty() -> {
+                    checkedBuilds(card, item, true)
+
                 }
-                card.isChecked && checkedBuildList.isNotEmpty() ->{
-                    checkedBuilds(card,item,false)
+
+                card.isChecked && checkedBuildList.isNotEmpty() -> {
+                    checkedBuilds(card, item, false)
                 }
 
                 else -> {
@@ -85,7 +90,8 @@ class OverviewRecyclerAdapter(
         }
 
         holder.itemView.setOnLongClickListener {
-            checkedBuilds(card,item,true)
+            this._position = holder.layoutPosition
+            checkedBuilds(card, item, true)
             true
         }
         when (item.category) {

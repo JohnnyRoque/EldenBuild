@@ -136,7 +136,7 @@ class CustomizeBuildFragment : Fragment() {
                     sharedViewModel.uiStateCharacterStatus.flowWithLifecycle(
                         lifecycle, Lifecycle.State.STARTED
                     ).collect {
-                        statusAdapter.notifyDataSetChanged()
+                        statusAdapter.notifyItemRangeChanged(0,statusAdapter.itemCount)
                         Log.d("stateUiStatus", "Collect")
                         Log.d("stateUiStatus", "$it")
 

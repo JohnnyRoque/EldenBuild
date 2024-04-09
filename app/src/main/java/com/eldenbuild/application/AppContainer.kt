@@ -2,9 +2,9 @@ package com.eldenbuild.application
 
 import androidx.room.Room
 import com.eldenbuild.data.database.AppDatabase
-import com.eldenbuild.data.database.BuildCategories
 import com.eldenbuild.data.network.EldenBuildApiService
 import com.eldenbuild.data.repository.BuildRepository
+import com.eldenbuild.data.repository.InstrumentedTestRepo
 import com.eldenbuild.data.repository.ItemOnlineRepository
 import com.eldenbuild.data.repository.ItemRepository
 import com.eldenbuild.data.repository.OfflineBuildRepository
@@ -15,13 +15,10 @@ import com.eldenbuild.util.json_adapter.ResponseAdapter
 import com.eldenbuild.viewmodel.OverViewViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import kotlin.random.Random
 
 
 private const val BASE_URL = "https://eldenring.fanapis.com/api/"
@@ -84,29 +81,4 @@ val instrumentedTestModule = module {
     }
 }
 
-class InstrumentedTestRepo() :
-    BuildRepository {
-
-    override fun getAllBuildStream(): Flow<List<BuildCategories>> = flow {
-        val dummyBuild = BuildCategories(
-            title = "dummy",
-            category = "",
-            description = "",
-            buildId = Random.nextInt(from = 1, until = 5),
-            buildItems = mutableListOf(),
-            buildCharacterStatus = mutableListOf()
-        )
-        val dummyList: MutableList<BuildCategories> = mutableListOf()
-        repeat(5) {
-            dummyList.add(dummyBuild)
-        }
-
-        emit(dummyList)
-    }
-
-    override fun getBuildStream(id: Int): Flow<BuildCategories> = flow {
-
-    }
-
-}
 

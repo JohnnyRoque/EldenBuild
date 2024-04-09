@@ -68,17 +68,19 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/item_selection_grid_recycler"
+                    itemList="@{currentBuild.buildItems}"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:overScrollMode="never"
                     android:padding="6dp"
                     android:visibility="invisible"
-                    app:itemList="@{currentBuild.buildItems}"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/item_selection_carousel"
+                    app:layout_constraintVertical_bias="0.0"
                     app:spanCount="4"
                     tools:itemCount="22"
                     tools:listitem="@layout/item_selection_grid" />
@@ -86,11 +88,12 @@
                 <ImageView
                     android:id="@+id/placeholder_image"
                     android:layout_width="0dp"
-                    android:layout_height="350dp"
+                    android:layout_height="0dp"
                     android:adjustViewBounds="true"
                     android:importantForAccessibility="no"
                     android:paddingTop="24dp"
                     android:src="@drawable/eldenring_iji"
+                    app:layout_constraintBottom_toTopOf="@+id/placeholder_text_view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/item_selection_carousel"
@@ -99,7 +102,7 @@
                 <TextView
                     android:id="@+id/placeholder_text_view"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:padding="12dp"
                     android:text="@string/placeholder_text"
                     android:textAlignment="center"
@@ -108,7 +111,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/item_selection_grid_recycler"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/placeholder_image" />
+                     />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

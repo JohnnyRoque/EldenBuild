@@ -53,49 +53,44 @@ class BuildsOverviewFragment : Fragment() {
         binding.apply {
             viewModel = sharedViewModel
             lifecycleOwner = viewLifecycleOwner
+
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                val buildAdapter = OverviewRecyclerAdapter(
+                    requireContext(),
+                    checkedBuilds = { card, build, addItem ->
+                        if (addItem) {
+                            sharedViewModel.addCheckedBuild(build)
+                            card.isChecked = true
+                        } else {
+                            sharedViewModel.removeCheckedBuild(build)
+                            card.isChecked = false
+                        }
+                    },
+                    buildDetail = { id ->
+                        if (!binding.slidingPaneLayout.isOpen) {
+                            binding.slidingPaneLayout.openPane()
+                        }
+                        launch(Dispatchers.IO) {
+                            sharedViewModel.getCurrentBuild(id).filterNotNull()
+                                .collect { build ->
+                                    if (CurrentBuild.buildDetail.value?.title == build.title) {
+                                        CurrentBuild.resetCheckedItemList()
+                                    }
+                                    CurrentBuild.getBuildDetail(build)
+                                    Log.d(TAG, "${CurrentBuild.buildDetail.value}")
+
+                                }
+                        }
+                    }
+                )
                 launch {
                     sharedViewModel.checkedBuildListUiState.filterNotNull().collect { list ->
-                        if (binding.buildRecyclerView.adapter == null) {
+                        buildAdapter.checkedBuildList = list
 
-                            binding.buildRecyclerView.adapter = OverviewRecyclerAdapter(
-                                requireContext(),
-                                checkedBuilds = { card, build, addItem ->
-                                    if (addItem) {
-                                        sharedViewModel.addCheckedBuild(build)
-                                        card.isChecked = true
-                                    } else {
-                                        sharedViewModel.removeCheckedBuild(build)
-                                        card.isChecked = false
-                                    }
-                                },
-                                buildDetail = { id ->
-                                    if (!binding.slidingPaneLayout.isOpen) {
-                                        binding.slidingPaneLayout.openPane()
-                                    }
-                                    launch(Dispatchers.IO) {
-                                        sharedViewModel.getCurrentBuild(id).filterNotNull()
-                                            .collect { build ->
-                                                if (CurrentBuild.buildDetail.value?.title == build.title) {
-                                                    CurrentBuild.resetCheckedItemList()
-                                                }
-                                                CurrentBuild.getBuildDetail(build)
-                                                Log.d(TAG, "${CurrentBuild.buildDetail.value}")
-
-                                            }
-                                    }
-                                }
-                            )
-                        } else {
-                            val buildAdapter =
-                                binding.buildRecyclerView.adapter as OverviewRecyclerAdapter
-                            buildAdapter.checkedBuildList = list
-                            //atualizar notify
-                            buildAdapter.notifyDataSetChanged()
-                        }
                         if (list.isNotEmpty()) {
                             binding.addBuildFab.setImageResource(R.drawable.delete_24px)
 
@@ -109,7 +104,18 @@ class BuildsOverviewFragment : Fragment() {
                                     title = R.string.delete_builds_dialog_title,
                                     positiveActionText = getString(R.string.accept_text),
                                     positiveAction = {
+                                        buildAdapter.notifyItemRangeRemoved(
+                                            buildAdapter.position,
+                                            list.size
+                                        )
+
                                         sharedViewModel.deleteCheckedBuild(list)
+
+                                        buildAdapter.notifyItemRangeChanged(
+                                            buildAdapter.position,
+                                            buildAdapter.itemCount
+                                        )
+
                                     }
 
                                 )
@@ -129,11 +135,12 @@ class BuildsOverviewFragment : Fragment() {
                     }
                 }
                 launch {
-                    sharedViewModel.buildsList.collect{
-                        if (it.isEmpty()){
+                    sharedViewModel.buildsList.collect {
+                        if (it.isEmpty()) {
                             binding.detailNavHost.visibility = View.GONE
 
-                        } else{
+                        } else {
+                            binding.buildRecyclerView.adapter = buildAdapter
                             binding.detailNavHost.visibility = View.VISIBLE
 
                         }

@@ -45,62 +45,51 @@ class BuildDetailFragment : Fragment() {
         return binding.root
     }
 
-    //De algum modo o flow não esta atualizando, somente atualizava por conta de ser chamado pela função
-    // stateFlow
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        val adapter = BuildItemsGridAdapter(
+            isItemSelectable = true,
+            checkedItemList = listOf(),
+            checkedItems = { card, item, addItem ->
+
+                if (addItem) {
+                    sharedViewModel.addCheckedItem(item)
+                    card.isChecked = true
+
+                } else {
+                    sharedViewModel.removeCheckedItem(item)
+                    card.isChecked = false
+
+                }
+
+            }, openItemDetail = { item, itemType ->
+
+                ItemDetailViewModel.getCurrentItem(item)
+                findNavController().navigate(
+                    BuildsOverviewFragmentDirections
+                        .actionBuildsOverviewFragmentToItemDetailsFragment(
+                            type = itemType,
+                            true
+                        )
+                )
+                Log.d("itemType", "type = $itemType")
+
+            })
 
 
         binding.apply {
             viewModel = sharedViewModel
             lifecycleOwner = viewLifecycleOwner
+            itemSelectionGridRecycler.adapter = adapter
         }
 
         lifecycleScope.launch {
-
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
                     sharedViewModel.checkedItemUiState.collect { list ->
-                        if (binding.itemSelectionGridRecycler.adapter == null) {
-                            binding.itemSelectionGridRecycler.adapter = BuildItemsGridAdapter(
-                                isItemSelectable = true,
-                                checkedItemList = list,
-                                checkedItems = { card, item, addItem ->
 
-                                    if (addItem) {
-                                        sharedViewModel.addCheckedItem(item)
-                                        card.isChecked = true
-
-                                    } else {
-                                        sharedViewModel.removeCheckedItem(item)
-                                        card.isChecked = false
-
-                                    }
-
-                                }, openItemDetail = { item, itemType ->
-
-                                    ItemDetailViewModel.getCurrentItem(item)
-                                    findNavController().navigate(
-                                        BuildsOverviewFragmentDirections
-                                            .actionBuildsOverviewFragmentToItemDetailsFragment(
-                                                type = itemType,
-                                                true
-                                            )
-                                    )
-                                    Log.d("itemType", "type = $itemType")
-
-                                })
-                        } else {
-                            val adapter =
-                                binding.itemSelectionGridRecycler.adapter as BuildItemsGridAdapter
-                            adapter.notifyDataSetChanged()
-                            adapter.checkedItemList = list
-                            if (adapter.itemCount == 0){
-                                binding.placeholderImage.visibility = View.VISIBLE
-                                binding.placeholderTextView.visibility = View.VISIBLE
-                            }
-                        }
-
+                        adapter.checkedItemList = list
 
                         binding.buildTopAppBar?.let { topBar ->
 
@@ -108,7 +97,7 @@ class BuildDetailFragment : Fragment() {
                             topBar.setOnMenuItemClickListener { menuItem ->
                                 when (menuItem.itemId) {
                                     R.id.delete -> {
-                                        Dialog.buildDialog (
+                                        Dialog.buildDialog(
                                             context = requireContext(),
                                             message = getString(
                                                 R.string.delete_items_dialog_message,
@@ -117,12 +106,25 @@ class BuildDetailFragment : Fragment() {
                                             title = R.string.delete_items_dialog_title,
                                             positiveActionText = getString(R.string.delete_text),
                                             positiveAction = {
+                                                adapter.notifyItemRangeRemoved(
+                                                    adapter.position,
+                                                    list.size
+                                                )
+
+                                                adapter.notifyItemRangeChanged(
+                                                    adapter.position,
+                                                    adapter.itemCount
+                                                )
+
                                                 Toast.makeText(
                                                     requireContext(),
                                                     sharedViewModel.deleteCheckedItems(
                                                         list
                                                     ), Toast.LENGTH_SHORT
                                                 ).show()
+
+
+
                                             }
                                         )
                                         true
@@ -141,22 +143,25 @@ class BuildDetailFragment : Fragment() {
 
                         // bind the currentBuild data to the views
                         binding.currentBuild = build
+
                         Log.d("buildSize", "${build.buildItems.size}")
 
                         // check if the buildItems list is empty or not
-                            if (build.buildItems.isNotEmpty()) {
-                                binding.itemSelectionGridRecycler.visibility = View.VISIBLE
-                                binding.placeholderImage.visibility = View.GONE
-                                binding.placeholderTextView.visibility = View.GONE
+                        if (build.buildItems.isNotEmpty()) {
+                            binding.itemSelectionGridRecycler.visibility = View.VISIBLE
+                            binding.placeholderImage.visibility = View.GONE
+                            binding.placeholderTextView.visibility = View.GONE
 
-                            } else {
-                                binding.placeholderImage.visibility = View.VISIBLE
-                                binding.placeholderTextView.visibility = View.VISIBLE
-                            }
+                        } else {
+                            binding.itemSelectionGridRecycler.visibility = View.INVISIBLE
+                            binding.placeholderImage.visibility = View.VISIBLE
+                            binding.placeholderTextView.visibility = View.VISIBLE
+                        }
 
                     }
 
                 }
+
             }
         }
         binding.itemSelectionCarousel.adapter = CarouselAdapter {
