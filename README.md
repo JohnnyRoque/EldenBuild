@@ -6,11 +6,12 @@ This app was written in Kotlin, following the Material Design 3 guidelines, usin
 
 Main components:
 
-* Android Jetpack Components (ViewModel, Flow, LiveData, Databinding, Navigation, Lifecycle, Paging 3)
+* Android Jetpack Components (ViewModel, Kotlin coroutines, Flow, LiveData, Databinding, Navigation, Lifecycle, Paging 3)
 * Software architecture - MVVM 
 * TypeAdapters - Gson
 * Dependency injection - Koin
 * Unit testing with Mockito
+* Instrumented tests
 * Image loading - COIL
 
 ## Kotlin
@@ -25,7 +26,7 @@ The architecture is built around Android Architecture Components and follows the
 ## Features
 Elden build allows you to easily create and store your builds on your cell phone. In this app, game items are listed in categories and can be added to and removed from your build, as well as modifying your character's attributes.
 
-<img src="https://github.com/JohnnyRoque/EldenBuild/assets/146282434/deb48d1b-550c-4a61-82dc-c2c7dba3385d" alt="Image"  />
+<img src="screenshot.png" alt="Image"  />
 
 ## Special thanks
 
